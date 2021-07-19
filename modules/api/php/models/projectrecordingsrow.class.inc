@@ -82,19 +82,19 @@ class ProjectRecordingsRow implements \LORIS\Data\DataInstance
         # get the recording's associated BIDS files
         $obj['ChannelsFileLink'] = (
             $this->_channelfile ?
-            "/candidates/$candID/$visit/recordings/$filename/bidsfiles/channels" : null
+            "/candidates/$candid/$visit/recordings/$filename/bidsfiles/channels" : null
         );
         $obj['ElectrodesFileLink'] = (
         $this->_electrodefile ?
-            "/candidates/$candID/$visit/recordings/$filename/bidsfiles/electrodes" : null
+            "/candidates/$candid/$visit/recordings/$filename/bidsfiles/electrodes" : null
         );
         $obj['EventsFileLink'] = (
         $this->_eventfile ?
-            "/candidates/$candID/$visit/recordings/$filename/bidsfiles/events" : null
+            "/candidates/$candid/$visit/recordings/$filename/bidsfiles/events" : null
         );
         $obj['JSONFileLink'] = (
         $this->_jsonfile ?
-            "/candidates/$candID/$visit/recordings/$filename/bidsfiles/json" : null
+            "/candidates/$candid/$visit/recordings/$filename/bidsfiles/json" : null
         );
 
         $obj['InsertTime'] = date('c', (int) $obj['InsertTime']);
