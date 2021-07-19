@@ -84,7 +84,7 @@ class Summary
             'File'   => $filename,
         );
 
-        if (str_ends_with($filename, 'nii') or str_ends_with($filename, 'nii.gz')) {
+        if (ends_with($filename, 'nii') or ends_with($filename, 'nii.gz')) {
             $bids_subdir = basename($this->_image->getFileInfo()->getPath());
             $arr['BIDS_subdir'] = $bids_subdir;
         }
