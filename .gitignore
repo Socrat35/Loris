@@ -19,6 +19,7 @@ htdocs/mantis*
 htdocs/mri_parameter_directions
 htdocs/my_tests/
 htdocs/phpunit_codecoverage/
+htdocs/team_2016_09_16.pdf
 logs/*.log
 modules/*/js/*.map
 modules/*/js/.module-cache/
