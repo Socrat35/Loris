@@ -96,6 +96,7 @@ function populateVisitLabel($result, $visit_label)
         $isFirstVisit = true;
     }
 
+
     //To assign missing instruments to all sessions, sent to DCC or not.
     $defined_battery =$battery->lookupBattery(
         $battery->age,

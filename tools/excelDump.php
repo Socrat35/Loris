@@ -162,9 +162,40 @@ foreach ($instruments as $instrument) {
             $DB->select($query, $instrument_table);
 //        }
     MapSubprojectID($instrument_table);
-	writeExcel($Test_name, $instrument_table, $dataDir);
+
+    // debug tmp ignore RBANS, until the bug is fixed, made it separate
+    if ($Test_name != 'RBANS') {
+
+
+        /* tried to fix "= Warning" thing, but somehow only part of data dumped. give up due to time limits
+        // debug add, someone used = Warning in front of some comments, but it caused excel dump not saving becuase = is treated as formula
+        foreach ($instrument_table as &$eachCellRow) {
+            foreach ($eachCellRow as &$eachCellCol) {
+                // if start with equal sign with any number of spacing in front
+                if (substr(ltrim($eachCellCol), 0, 1) === '='){
+                    $eachCellCol = str_replace('=', '#=', $eachCellCol);
+                    }
+            }
+            unset($eachCellCol);
+        };
+        unset($eachCellRow); // break the reference with the last element
+    */
+
+    writeExcel($Test_name, $instrument_table, $dataDir);
+    }
 
 } //end foreach instrument
+
+
+/**
+ * RBANS somehow doesn't work, here make it separate.
+ */
+$Test_name = 'RBANS';
+$query = "select c.PSCID, c.CandID, s.SubprojectID, s.Visit_label, ps.MCI_converter, ps.MCI_converter_confirmed_onset, s.Submitted, s.Current_stage, s.Visit, f.Administration, e.full_name as Examiner_name, f.Data_entry, i.* from (candidate c, session s, flag f, $Test_name i left outer join examiners e on i.Examiner = e.examinerID) left join participant_status ps on (ps.CandID=c.CandID and ps.MCI_converter='yes') where c.PSCID not like 'dcc%' and c.PSCID not like '0%' and c.PSCID not like '1%' and c.PSCID not like '2%' and c.PSCID != 'scanner' and i.CommentID not like 'DDE%' and c.CandID = s.CandID and s.ID = f.sessionID and f.CommentID = i.CommentID AND c.Active='Y' AND s.Active='Y' AND c.PSCID not like 'MTL0000' AND c.PSCID not like 'MTL999%' " . $limit_date_instruments . $nofail . " order by s.Visit_label, c.PSCID";
+$DB->select($query, $results);
+MapSubprojectID($results);
+writeExcel($Test_name, $results, $dataDir);
+
 
 /*
 * Candidate Information query
@@ -448,6 +479,7 @@ function writeExcel ($Test_name, $instrument_table, $dataDir) {
                 'font'      => array('bold' => true),
                 'alignment' => array('horizontal' => $hor_cen),
                );
+
     $ExcelWorkSheet->getStyle($header)->applyFromArray($style);
 
 	// add data to worksheet
@@ -462,9 +494,10 @@ function writeExcel ($Test_name, $instrument_table, $dataDir) {
 
 	// save file to disk
     print "Creating " . $Test_name . ".xls\n";
+    
     $writer = PHPExcel_IOFactory::createWriter($ExcelApplication, 'Excel2007');
     $writer->save("$dataDir/$Test_name.xls");
-    
+
     unset($ExcelApplication);
 } //end function writeExcel
 
