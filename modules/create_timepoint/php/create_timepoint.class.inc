@@ -217,7 +217,7 @@ class Create_Timepoint extends \NDB_Form
                 $psc_labelOptions = array(null => '');
                 foreach ($user_list_of_sites as $key => $siteID) {
                     $center = $DB->pselectRow(
-                        "SELECT CenterID as ID, Name FROM psc 
+                        "SELECT CenterID as ID, Name FROM psc
                         WHERE CenterID =:cid",
                         array('cid' => $siteID)
                     );
@@ -278,11 +278,157 @@ class Create_Timepoint extends \NDB_Form
             }
         }
 
-	$validTimepoints = array("PREEL00","PREEN00","PREBL00","PRETL06","PREFU12","PRETL18","PREFU24","PRETL30","PREFU36","PRETL42","PRETL42","PREFU48","PRETL54","PRETL66","NAPEN00","NAPBL00","NAPLP00","NAPLA01","NAPTL01","NAPLP03","NAPFU03","NAPFU06","NAPTL09","NAPLP12","NAPFU12","NAPTL15","NAPFU18","NAPTL21","NAPLP24","NAPFU24","NAPTL30","NAPFU36","NAPLP36","NAPTL42","NAPFU48","NAPTL54","NAPTL66","PREAE00","PREAE01","PREAE03","PREAE06","PREAE09","PREAE12","PREAE15","PREAE18","PREAE21","PREAE24","PREAE30","PREAE36","PREAE42","PREAE48","NAPAE00","NAPAE01","NAPAE03","NAPAE06","NAPAE09","NAPAE12","NAPAE15","NAPAE18","NAPAE21","NAPAE24","NAPAE30","NAPAE36","NAPAE42","NAPAE48","NAPTI00", "NAPTL25", "PREAP00", "PREAP01", "PREAP02", "PREAP03", "PREAP04", "PREAP05", "NAPAP00", "NAPAP01", "NAPAP02", "NAPAP03", "NAPAP04", "NAPAP05", "PREEC00", "NAPEC00", "PRELP00","PRELP03", "PRELP12", "PRELP24", "PRELP36", "PRELP48", "POIEP00","POIWA00","POIWA01","POIWA02","POIWA03","POICA00","POICA03","POIMA01","POIMA02","POIMA03","POIWB00","POIWB01","POIWB02","POIWB03","POICB00","POICB12","POIMB01","POIMB02","POIMB03","NAPLP48", "POIAE00", "POITI00", "YNGEN00", "MCIEN00", "CTLEN00", "YNGEL00", "MCIEL00", "CTLEL00", "YNGBL00", "MCIBL00", "CTLBL00", "YNGLP00", "MCILP00", "CTLLP00", "PREFU60", "NAPFU60", "PREFU72", "PREFU84", "PREFU96", "PREFU108", "PREFU120", "PREFU132", "PREFU144", "PREFU156", "NAPFU72", "NAPFU84", "NAPFU96", "NAPFU108", "NAPFU120", "NAPFU132", "NAPFU144", "NAPFU156", "MCIFU12", "MCIFU24", "MCIFU36");
+	$validTimepoints = array(
+                                /*******************************************************/
+                                /*---------------- PreventAD Cohort--------------------*/
+                                /*******************************************************/
+
+                                /*Eligibility*/
+                                "PREEL00",
+
+                                /*Enrollment*/
+                                "PREEN00",
+
+                                /*Baseline*/
+                                "PREBL00",
+
+                                /*Telephone Call*/
+                                "PRETL06","PRETL18","PRETL30","PRETL42","PRETL54","PRETL66",
+
+                                /*Follow-Up*/
+                                "PREFU12","PREFU24","PREFU36","PREFU48","PREFU60","PREFU72","PREFU84","PREFU96","PREFU108","PREFU120","PREFU132","PREFU144","PREFU156",
+
+                                /*Adverse Event*/
+                                "PREAE00","PREAE01","PREAE03","PREAE06","PREAE09","PREAE12","PREAE15","PREAE18","PREAE21","PREAE24","PREAE30","PREAE36","PREAE42","PREAE48",
+
+                                /*???*/
+                                "PREAP00","PREAP01","PREAP02","PREAP03","PREAP04","PREAP05",
+
+                                /*???*/
+                                "PREEC00",
+
+                                /*Lumbar punctures*/
+                                "PRELP00","PRELP03","PRELP12","PRELP24","PRELP36","PRELP48",
+
+                                /*******************************************************/
+                                /*---------------- Naproxene Cohort--------------------*/
+                                /*******************************************************/
+
+                                /*Enrollment*/
+                                "NAPEN00",
+
+                                /*Baseline*/
+                                "NAPBL00",
+
+                                /*Lumbar punctures*/
+                                "NAPLP00","NAPLP03","NAPLP12","NAPLP24","NAPLP36","NAPLP48",
+
+                                /*Lab visit*/
+                                "NAPLA01",
+
+                                /*Telephone*/
+                                "NAPTL01","NAPTL09","NAPTL15","NAPTL21","NAPTL25","NAPTL30","NAPTL42","NAPTL54","NAPTL66",
+
+                                /*Follow-up*/
+                                "NAPFU03","NAPFU06","NAPFU12","NAPFU18","NAPFU24","NAPFU36","NAPFU48","NAPFU60","NAPFU72","NAPFU84","NAPFU96","NAPFU108","NAPFU120","NAPFU132","NAPFU144","NAPFU156",
+
+                                /*Adverse event*/
+                                "NAPAE00","NAPAE01","NAPAE03","NAPAE06","NAPAE09","NAPAE12","NAPAE15","NAPAE18","NAPAE21","NAPAE24","NAPAE30","NAPAE36","NAPAE42","NAPAE48",
+
+                                /*???*/
+                                "NAPAP00","NAPAP01","NAPAP02","NAPAP03","NAPAP04","NAPAP05",
+
+                                /*Treatment interruption*/
+                                "NAPTI00",
+
+                                /*???*/
+                                "NAPEC00",
+
+                                /*******************************************************/
+                                /*---------------- Probucol? Cohort--------------------*/
+                                /*******************************************************/
+
+                                /*Eligibility Probucol*/
+                                "POIEP00",
+
+                                /*Weekly visit probucol phase A*/
+                                "POIWA00","POIWA01","POIWA02","POIWA03",
+
+                                /*Probucol lumbar puncture phase A*/
+                                "POICA00","POICA03",
+
+                                /*Monthly visit probucol phase A*/
+                                "POIMA01","POIMA02","POIMA03",
+
+                                /*Weekly visit probucol phase B*/
+                                "POIWB00","POIWB01","POIWB02","POIWB03",
+
+                                /*Probucol lumbar puncture phase B*/
+                                "POICB00","POICB12",
+
+                                /*Monthly visit probucol phase B*/
+                                "POIMB01","POIMB02","POIMB03",
+
+                                /*Adverse event*/
+                                "POIAE00",
+
+                                /*Treatment interruption*/
+                                "POITI00",
+
+                                /*******************************************************/
+                                /*------------------- Young Cohort --------------------*/
+                                /*******************************************************/
+
+                                /*Eligibility*/
+                                "YNGEL00",
+
+                                /*Enrollment*/
+                                "YNGEN00",
+
+                                /*Baseline*/
+                                "YNGBL00",
+
+                                /*Lumbar puncture*/
+                                "YNGLP00",
+
+                                /*******************************************************/
+                                /*-------------------- MCI Cohort  --------------------*/
+                                /*******************************************************/
+
+                                /*Eligibility*/
+                                "MCIEL00",
+
+                                /*Enrollment*/
+                                "MCIEN00",
+
+                                /*Baseline*/
+                                "MCIBL00",
+
+                                /*Lumbar puncture*/
+                                "MCILP00",
+
+                                /*Follow-up*/
+                                "MCIFU00","MCIFU12", "MCIFU24", "MCIFU36","MCIFU48","MCIFU60","MCIFU72","MCIFU84","MCIFU108","MCIFU120","MCIFU132","MCIFU144","MCIFU156",
+
+                                /*******************************************************/
+                                /*-------------------- CTL Cohort  --------------------*/
+                                /*******************************************************/
+
+                                /*Eligibility*/
+                                "CTLEL00",
+
+                                /*Enrollment*/
+                                "CTLEN00",
+
+                                /*Baseline*/
+                                "CTLBL00",
+
+                                /*Lumbar puncture*/
+                                "CTLLP00");
+
         if (!in_array($concatTimePoint,$validTimepoints)) {
             $errors['visitLabel1'] = 'Invalid timepoint!';
         }
-
         return $errors;
     }
 }
