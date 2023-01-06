@@ -42,3 +42,5 @@ tools/ip_output.txt.only_mri_parameter_form_bugging_out
 tools/logs/
 tools/logs/*.log
 tools/project_statistics_06_09_2020.csv
+composer.phar
+package-lock.json
