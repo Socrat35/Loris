@@ -314,9 +314,7 @@ class SinglePointLogin
                     $user->updatePassword($password);
                 }
 
-                if ($row['Active'] == 'N'
-                    || $this->disabledDueToInactivity($username, 365)
-                ) {
+                if ($row['Active'] == 'N') {
                     $this->_lastError = "Your account has been deactivated."
                         . " Please contact your project administrator to"
                         . " reactivate this account.";
@@ -417,39 +415,6 @@ class SinglePointLogin
 
         // in future, add mapping of error message to Failcode field enum
         $DB->insert('user_login_history', $setArray);
-    }
-
-    /**
-     * Checks if a user has not logged in for a given amount of time
-     * As a side-effect, if true, will also set user field 'active' to 'N'
-     * Need to have already confirmed valid user
-     *
-     * @param String $username            username
-     * @param Int    $maximumDaysInactive Most allowable days for inactivity
-     *
-     * @return bool - true if the user has now been disabled
-     */
-    function disabledDueToInactivity($username, $maximumDaysInactive)
-    {
-        $DB    =& Database::singleton();
-        $query = "SELECT MAX(Login_timestamp) as Login_timestamp
-                  FROM user_login_history 
-                  WHERE UserID = :username";
-
-        $row        = $DB->pselectRow($query, array('username' => $username));
-        $last_login = new DateTime($row['Login_timestamp']);
-        $time_now   = new DateTime("now");
-        $interval   = $last_login->diff($time_now);
-
-        if ($interval->days > $maximumDaysInactive) {
-            $DB->update(
-                'users',
-                array('Active' => 'N'),
-                array('UserID' => $username)
-            );
-            return true;
-        }
-        return false;
     }
 }
 ?>
