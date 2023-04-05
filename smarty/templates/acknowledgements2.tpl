@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content={if $authorship == "1"}"List of the Authors for the PreventAD Dataset"{else}"Acknowledgements for the contributors to the PreventAD Dataset"{/if}>
+        <meta name="description" content={if $authorship == "1"}"List of the Authors for the PREVENT-AD Dataset"{else}"Acknowledgements for the contributors to the PREVENT-AD Dataset"{/if}>
         <link rel='stylesheet' type='text/css' href='{$baseurl}/{$css}' />
         <link rel='stylesheet' type='text/css' href='{$baseurl}/css/loris-jquery/jquery-ui-1.10.4.custom.min.css' />
         <link rel='stylesheet' type='text/css' href='{$baseurl}/bootstrap/css/bootstrap.min.css'>
@@ -17,7 +17,7 @@
             <img class="logo img-responsive" src="{$baseurl}/images/preventadlogo.png"/>
         </div>
         <div id="tabs">
-            <h1>{if $authorship == "1"}Authorship List for the PreventAD Dataset{else}Acknowledgements for the contributors to the PreventAD Dataset{/if}</h1>
+            <h1>{if $authorship == "1"}Authorship List for the PREVENT-AD Dataset{else}Acknowledgements for the contributors to the PREVENT-AD Dataset{/if}</h1>
             <h4>{if $authorship == "1"}<a href="{$baseurl}/acknowledgements/acknowledgements2.php?date={$date}">Acknowledgements List</a>{else}<a href="{$baseurl}/acknowledgements/acknowledgements2.php?date={$date}&authors">Authorship List</a>{/if}</h4>
             <div class="tab-content">
                 <div class="tab-pane active">
