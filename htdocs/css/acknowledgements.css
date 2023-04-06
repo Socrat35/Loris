@@ -53,6 +53,7 @@ table.table {
 
 #tabs {
   background: white;
+  padding-bottom: 50px;
 }
 
 div.page-header-banner > img.logo {
