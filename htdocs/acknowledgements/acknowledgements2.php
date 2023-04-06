@@ -99,7 +99,8 @@ $affiliations = reIndex("AffiliationID", getAffiliationDisplayData(   $Affiliati
 
 // Extracting and re-indexing the Roles data from the DB
 $roles = reIndex("RoleID", getRoleDisplayData(    $RoleID = true,
-                                                            $Name = true));
+                                                            $Name = true,
+                                                            $Ordering = true));
 // Extracting and re-indexing the Degree data from the DB
 $degrees = reIndex("DegreeID", getDegreeDisplayData(      $DegreeID = true,
                                                                     $CycleID = true,
@@ -113,25 +114,40 @@ $titles = reIndex("ProfessionalTitleID", getTitleDisplayData(     $ProfessionalT
                                                                             $Name = true,
                                                                             $Abbreviation = true));
 
-// Define the main query for the list of person to be included
-$mainQuery = createMainQueryString( $publication_date_name,
-                                    $non_temporary = true,
-                                    $days = 90,
-                                    $authorship);
+// Define the main query for the current contributors
+$queryCurrentContributors = createMainQueryString(  $publication_date_name,
+                                                    $non_temporary = true,
+                                                    $days = 90,
+                                                    $authorship,
+                                                    $presence = true);
+
+// Define the main query for the past contributors
+$queryPastContributors = createMainQueryString(     $publication_date_name,
+                                                    $non_temporary = true,
+                                                    $days = 90,
+                                                    $authorship,
+                                                    $presence = false);
 
 // Run the query as a prepared statement
-$SQLResults = $db->pselect( $mainQuery,
-                            [$publication_date_name => $publication_date]);
+$currentSQLResults = $db->pselect(  $queryCurrentContributors,
+                                    [$publication_date_name => $publication_date]);
+
+// Run the query as a prepared statement
+$pastSQLResults = $db->pselect( $queryPastContributors,
+                                [$publication_date_name => $publication_date]);
 
 // Process the concat columns to an exploitable form for Smarty
-$results = processConcatColumns($SQLResults);
+$currentContributors = processConcatColumns($currentSQLResults);
+// Process the concat columns to an exploitable form for Smarty
+$pastContributors = processConcatColumns($pastSQLResults);
 
 
 // Pass the gathered values to the data array for Smarty
 $tpl_data['authorship'] = $authorship;
 $tpl_data["date"] = $publication_date;
 $tpl_data['columns'] = $columns;
-$tpl_data['results'] = $results;
+$tpl_data['currentContributors'] = $currentContributors;
+$tpl_data['pastContributors'] = $pastContributors;
 $tpl_data['affiliations'] = $affiliations;
 $tpl_data['roles'] = $roles;
 $tpl_data['degrees'] = $degrees;
@@ -154,6 +170,7 @@ $smarty->display('acknowledgements2.tpl');
  * @param int     $days                         minimum number of days to be considered
  * @param boolean $authorship                   whether to display everyone within the specified range or
  *                                              only persons with the author boolean
+ * @param boolean $presence                     only include persons currently at the center
  *
  * @return string
  * @access public
@@ -164,7 +181,8 @@ $smarty->display('acknowledgements2.tpl');
 function createMainQueryString( string $publication_date_name = "publication_date",
                                 bool $non_temporary = true,
                                 int $days = 90,
-                                bool $authorship = true) : string {
+                                bool $authorship = true,
+                                bool $presence = true) : string {
     $query  = "SELECT ";
     $query .= " person.PersonID AS \"Person ID\", ";
     $query .= " person.FullName AS \"Full Name\", ";
@@ -174,9 +192,10 @@ function createMainQueryString( string $publication_date_name = "publication_dat
     $query .= " person.EndDate AS \"Center End Date\", ";
     $query .= " GROUP_CONCAT(DISTINCT affiliation.AffiliationID) AS \"Affiliation IDs\", ";
     $query .= " GROUP_CONCAT(DISTINCT affiliation.Levels) AS \"Affiliation Levels\", ";
-    $query .= " GROUP_CONCAT(DISTINCT role.RoleID ORDER BY role.Name) as \"Role IDs\", ";
+    $query .= " GROUP_CONCAT(DISTINCT role.RoleID ORDER BY role.Ordering, role.Name) as \"Role IDs\", ";
     $query .= " GROUP_CONCAT(DISTINCT title.ProfessionalTitleID ORDER BY title.Abbreviation) as \"Title IDs\", ";
-    $query .= " GROUP_CONCAT(DISTINCT degree.DegreeID ORDER BY degree.Level ASC, degree.Abbreviation ASC) as \"Degree IDs\" ";
+    $query .= " GROUP_CONCAT(DISTINCT degree.DegreeID ORDER BY degree.Level ASC, degree.Abbreviation ASC) as \"Degree IDs\", ";
+    $query .= " MIN(role.Ordering) AS \"Importance\" ";
     $query .= "FROM acknowledgements_person person ";
     $query .= "LEFT JOIN ( ";
     $query .= "             SELECT ";
@@ -200,7 +219,8 @@ function createMainQueryString( string $publication_date_name = "publication_dat
     $query .= "                     aprr.RoleID AS RoleID, ";
     $query .= "                     aprr.StartDate AS StartDate, ";
     $query .= "                     aprr.EndDate AS EndDate, ";
-    $query .= "                     ar.Name AS Name ";
+    $query .= "                     ar.Name AS Name, ";
+    $query .= "                     ar.Ordering AS Ordering";
     $query .= "             FROM acknowledgements_person_role_rel aprr ";
     $query .= "             INNER JOIN acknowledgements_role ar ON (aprr.RoleID = ar.RoleID) ";
     $query .= "         ) role ON (person.PersonID = role.PersonID) ";
@@ -228,8 +248,9 @@ function createMainQueryString( string $publication_date_name = "publication_dat
     $query .= "WHERE person.StartDate <= :$publication_date_name ";
     $query .= $non_temporary ? " AND (person.EndDate IS NULL OR DATEDIFF(person.EndDate, person.StartDate) > $days) " : " ";
     $query .= $authorship ? " AND person.Authorship <> \"0\" " : " ";
+    $query .= $presence ? " AND (person.EndDate IS NULL OR (:$publication_date_name BETWEEN person.StartDate AND person.EndDate)) " : " AND (person.EndDate IS NOT NULL AND NOT (:$publication_date_name BETWEEN person.StartDate AND person.EndDate)) ";
     $query .= "GROUP BY person.PersonID ";
-    $query .= "ORDER BY person.CitationName;";
+    $query .= "ORDER BY Importance, person.CitationName;";
 
     return $query;
 
@@ -314,14 +335,16 @@ function getAffiliationDisplayData(
  */
 function getRoleDisplayData(
     bool $RoleID = true,
-    bool $Name = true): array{
+    bool $Name = true,
+    bool $Ordering = true): array{
 
     // Getting link to the global handle for the database singleton
     global $db;
 
     // Using the compact function to create an associative array keyed on the parameter names to the values provided
     $columns = compact( "RoleID",
-                        "Name");
+                        "Name",
+                        "Ordering");
 
     // Remove the unneeded columns
     $columns = formatColumns(array(), $columns);
