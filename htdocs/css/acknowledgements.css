@@ -71,3 +71,8 @@ div.page-header-banner > img.logo {
   margin-bottom: 30px;
   font-weight: bold;
 }
+
+tr.table-secondary {
+  color: darkgray;
+  font-style: italic;
+}
