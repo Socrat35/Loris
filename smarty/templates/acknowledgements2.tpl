@@ -76,8 +76,10 @@
                         </thead>
                         <tbody>
                             {DisplayContributors Contributors=$currentContributors RowClass="table-primary"}
+                            {if !empty($pastContributors)}
                             <tr><td colspan="6"><hr/></tr>
                             {DisplayContributors Contributors=$pastContributors RowClass="table-secondary"}
+                            {/if}
                         </tbody>
                     </table>
                 </div>
