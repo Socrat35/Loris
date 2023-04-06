@@ -1,14 +1,14 @@
 {function RecursivePrint}
-<ul>
-{foreach $person_affiliations as $affiliation}
-    {if is_array($affiliation)}
+    <ul>
+    {foreach $person_affiliations as $affiliation}
+        {if is_array($affiliation)}
         <li class="item">{$affiliations[$affiliation@key]["Name"]}, {$affiliations[$affiliation@key]["City"]}, {$affiliations[$affiliation@key]["StateCode"]}, {$affiliations[$affiliation@key]["CountryCode"]}</li>
         {RecursivePrint person_affiliations=$affiliation}
-    {else}
-        <li class="item">{$affiliation}</li>
-    {/if}
-{/foreach}
-</ul>
+        {else}
+         <li class="item">{$affiliation}</li>
+        {/if}
+    {/foreach}
+    </ul>
 {/function}
 {function DisplayContributors}
     {foreach from=$Contributors item=person}
@@ -19,24 +19,24 @@
         <td>
             <ul>
                 {foreach from=$person["Degree IDs"] item=degreeIDs}
-                    <li>{$degrees[$degreeIDs]["Abbreviation"]}</li>
-                    {foreachelse}
+                <li>{$degrees[$degreeIDs]["Abbreviation"]}</li>
+                {foreachelse}
                 {/foreach}
             </ul>
         </td>
         <td>
             <ul>
                 {foreach from=$person["Title IDs"] item=titleIDs}
-                    <li>{$titles[$titleIDs]["Abbreviation"]}</li>
-                    {foreachelse}
+                <li>{$titles[$titleIDs]["Abbreviation"]}</li>
+                {foreachelse}
                 {/foreach}
             </ul>
         </td>
         <td>
             <ul>
                 {foreach from=$person["Role IDs"] item=roleIDs}
-                    <li>{$roles[$roleIDs]["Name"]}</li>
-                    {foreachelse}
+                <li>{$roles[$roleIDs]["Name"]}</li>
+                {foreachelse}
                 {/foreach}
             </ul>
         </td>
