@@ -63,7 +63,7 @@
         </div>
         <div id="tabs">
             <h1>{if $authorship == "1"}Authorship List for the PREVENT-AD Dataset{else}Acknowledgements for the contributors to the PREVENT-AD Dataset{/if}</h1>
-            <h4>{if $authorship == "1"}<a href="{$baseurl}/acknowledgements/acknowledgements2.php?date={$date}">Acknowledgements List</a>{else}<a href="{$baseurl}/acknowledgements/acknowledgements2.php?date={$date}&authors">Authorship List</a>{/if}</h4>
+            <h4>{if $authorship == "1"}For the Acknowledgements List, click <a href="{$baseurl}/acknowledgements/acknowledgements2.php?date={$date}">here</a>.{else}For the Authorship List, click <a href="{$baseurl}/acknowledgements/acknowledgements2.php?date={$date}&authors">here</a>.{/if}</h4>
             <div class="tab-content">
                 <div class="tab-pane active">
                     <table class='table table-bordered'>
@@ -77,13 +77,21 @@
                         <tbody>
                             {DisplayContributors Contributors=$currentContributors RowClass="table-primary"}
                             {if !empty($pastContributors)}
-                            <tr><td colspan="6"><hr/></tr>
+                                <tr><td colspan="6"><hr/><span class="table-separator">Past Contributors</span><hr/></tr>
                             {DisplayContributors Contributors=$pastContributors RowClass="table-secondary"}
                             {/if}
                         </tbody>
                     </table>
                 </div>
             </div>
+        </div>
+        <div id="downloadButtons">
+            <form method='post'>
+                <div>
+                    <input class='btn btn-primary' name="XML" type='submit' value='Download as XML' />
+                    <input class='btn btn-primary' name="TSV" type='submit' value='Download as TSV' />
+                </div>
+            </form>
         </div>
     </body>
 </html>
