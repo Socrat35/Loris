@@ -69,7 +69,7 @@ class User extends UserPermissions
         $user_centerID_query =  $DB->pselect(
             "SELECT CenterID FROM user_psc_rel upr
                         WHERE upr.UserID= :UID",
-            array('UID' => $row['ID'])
+            array('UID' => $row['ID'] ?? "")
         );
         $user_cid            = array();
         foreach ($user_centerID_query as $key=>$val) {
@@ -90,7 +90,7 @@ class User extends UserPermissions
                           OR (epr.active='N' AND epr.pending_approval='Y')
                         )",
             array(
-             "fn" => $row['Real_name'],
+             "fn" => $row['Real_name'] ?? "",
             )
         );
 
