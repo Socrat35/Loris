@@ -837,7 +837,9 @@ function affiliationRecursiveNodeWalker(DOMElement &$root, int $affiliationID, a
  * @return void
  */
 function contributorXMLProcessing(array $contributors, DOMElement &$group){
+    // DOMDocument object used for XML operations
     global $XML;
+    // Arrays used to retrieve data based on identifiers
     global $degrees;
     global $roles;
     global $titles;
@@ -1007,50 +1009,74 @@ function affiliationRecursiveTSVWalker(array &$ContributorAffiliations, int $aff
  * @return void
  */
 function contributorTSVProcessing(array $contributorGroup, &$outputBuffer, string $separator, bool $active){
+    // Defining the global arrays used to get the values linked to the ids
     global $degrees;
     global $titles;
     global $roles;
 
+    // For each contributor of the group
     foreach($contributorGroup as $contributor){
+        // Define an empty array for the contributor's data
         $ContributorData = array();
 
+        // Add the name and citation name to the contributor's data array
         $ContributorData["Full Name"] = $contributor["Full Name"];
         $ContributorData["Citation Name"] = $contributor["Citation Name"];
 
+        // Define an empty array for the contributor's affiliations
         $ContributorAffiliations = array();
 
+        // For each affiliation of the contributor
         foreach($contributor["Affiliation IDs"] as $affiliationID => $childAffiliations){
+            // Use the recursive walker function to add a flatten version of the affiliations to the contributor's
+            // affiliations' array
             affiliationRecursiveTSVWalker($ContributorAffiliations, $affiliationID, $childAffiliations);
         }
 
+        // Compress the flattened affiliations' array to a string and assign to the contributor's
+        // data array
         $ContributorData["Affiliations"] = implode(" | ", $ContributorAffiliations);
 
+        // Define an empty array for the contributor's degrees
         $ContributorDegrees = array();
 
+        // For each degree
         foreach($contributor["Degree IDs"] as $degreeID){
+            // Assign the degree's abbreviation to the degrees' array
             $ContributorDegrees[] = $degrees[$degreeID]["Abbreviation"];
         }
 
+        // Compress the degrees array to a string and assign to the contributor's data array
         $ContributorData["Degrees"] = implode(", ", $ContributorDegrees);
 
+        // Define an empty array for the contributor's titles
         $ContributorTitles = array();
 
+        // For each title
         foreach($contributor["Title IDs"] as $titleID){
+            // Assign the title's abbreviation to the titles' array
             $ContributorTitles[] = $titles[$titleID]["Abbreviation"];
         }
 
+        // Compress the titles array to a string and assign to the contributor's data array
         $ContributorData["Titles"] = implode(", ", $ContributorTitles);
 
+        // Define an empty array for the contributor's roles
         $ContributorRoles = array();
 
+        // For each role
         foreach($contributor["Role IDs"] as $roleID){
+            // Assign the role's name to the roles' array
             $ContributorRoles[] = $roles[$roleID]["Name"];
         }
 
+        // Compress the roles array to a string and assign to the contributor's data array
         $ContributorData["Roles"] = implode(", ", $ContributorRoles);
 
+        // Set the value for the active column to the state passed as a parameter
         $ContributorData["Active"] = $active ? "Active" : "Inactive";
 
+        // Output to the contributor's data array to the specified buffer using the specified separator
         fputcsv($outputBuffer, $ContributorData, $separator);
     }
 }
