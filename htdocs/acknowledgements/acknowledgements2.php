@@ -153,10 +153,100 @@ $tpl_data['roles'] = $roles;
 $tpl_data['degrees'] = $degrees;
 $tpl_data['titles'] = $titles;
 
-// Assign data object to Smarty instance
-$smarty->assign($tpl_data);
-// Render the page using Smarty
-$smarty->display('acknowledgements2.tpl');
+// Rendering the data based on the request method
+
+// If the request uses GET
+if($_SERVER["REQUEST_METHOD"] === "GET"){
+    // Assign data object to Smarty instance
+    $smarty->assign($tpl_data);
+    // Render the page using Smarty
+    $smarty->display('acknowledgements2.tpl');
+    // If the request uses POST and the XML keyword
+}elseif($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["XML"])){
+    // Create the DOMDocument instance
+    $XML = new DOMDocument();
+    // Set the encoding to unicode 8
+    $XML->encoding = "UTF-8";
+    // Set the XML version
+    $XML->xmlVersion = "1.0";
+    // Set this parameter to produce proper indentation
+    $XML->formatOutput = true;
+
+    // Create an encompassing element for all contributors
+    $Contributors = $XML->createElement("Contributors");
+    // Append the element to the DOMDocument
+    $XML->appendChild($Contributors);
+
+    // Create an encompassing element for all current contributors
+    $Current = $XML->createElement("CurrentContributors");
+    // Create an encompassing element for all past contributors
+    $Past = $XML->createElement("PastContributors");
+
+    // Parsing the processed results to an XML structure for past and current contributors
+    contributorXMLProcessing($currentContributors, $Current);
+    contributorXMLProcessing($pastContributors, $Past);
+
+    // Appending the parsed results to the encompassing element
+    $Contributors->appendChild($Current);
+    $Contributors->appendChild($Past);
+
+    // Setting the content type of the header
+    header("Content-Type: text/xml");
+    // Setting the disposition and choosing the filename to account for the authorship property
+    header('Content-Disposition: attachment; filename=' . ($authorship ? "Authors.xml" : "Acknowledgements.xml"));
+    // Sending the filesize to prevent overruns
+    header("Content-Length: " . strlen($XML->saveXML()));
+
+    // Outputting the XML
+    echo($XML->saveXML());
+    //If the request uses POST and the TSV keyword
+}elseif($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["TSV"])){
+
+    // Define the headers' array
+    $headers = array();
+
+    // For each column defined, which preserves the order
+    foreach($columns as $column){
+        // Add the column to the headers' array
+        $headers[] = $column;
+    }
+
+    // Adding a supplemental column to reflect the active status of each contributor
+    $headers[] = "Status";
+
+    // Create a streaming object in memory with writing capabilities
+    $outputBuffer = fopen('php://memory', 'w+');
+
+    // Put the columns into the buffer with tab separation
+    fputcsv($outputBuffer, $headers, $separator="\t");
+
+    // Process both current and past contributors
+    contributorTSVProcessing($currentContributors, $outputBuffer, $separator, $active=true);
+    contributorTSVProcessing($pastContributors, $outputBuffer, $separator, $active=false);
+
+    // Return to the start of the buffer
+    rewind($outputBuffer);
+
+    // Get the content of the buffer as a string
+    $outputString = stream_get_contents($outputBuffer);
+
+    // Close the buffer
+    fclose($outputBuffer);
+
+    // Set header to allow for the download of the TSV file
+    header("Content-Type: text/plain");
+    // Account for the type of list in the filename
+    header('Content-Disposition: attachment; filename=' . ($authorship ? "Authors.tsv" : "Acknowledgements.tsv"));
+    // Account for the length of the file
+    header("Content-Length: " . strlen($outputString));
+
+    // Output file
+    echo($outputString);
+}else{
+    echo("This page doesn't support either this method or these parameters.");
+}
+// Terminating the script
+exit();
 
 /**
  * Creates the main query to list the users to include in the acknowledgements page
@@ -223,6 +313,9 @@ function createMainQueryString( string $publication_date_name = "publication_dat
     $query .= "                     ar.Ordering AS Ordering";
     $query .= "             FROM acknowledgements_person_role_rel aprr ";
     $query .= "             INNER JOIN acknowledgements_role ar ON (aprr.RoleID = ar.RoleID) ";
+    $query .= "             WHERE   (aprr.StartDate IS NULL AND aprr.EndDate IS NULL) ";
+    $query .= "                     OR (aprr.EndDate IS NULL AND aprr.StartDate <= :$publication_date_name) ";
+    $query .= "                     OR (:$publication_date_name BETWEEN aprr.StartDate AND aprr.EndDate) ";
     $query .= "         ) role ON (person.PersonID = role.PersonID) ";
     $query .= "LEFT JOIN ( ";
     $query .= "             SELECT ";
@@ -604,6 +697,7 @@ function processConcatColumns(
  *
  * @param   array   $output     hierarchical array containing the representation of the path
  * @param   array   $levels     array containing the path as a sequence of integer
+ *
  * @return void
  */
 function recursivePathParser(array &$output, array $levels){
@@ -626,6 +720,7 @@ function recursivePathParser(array &$output, array $levels){
  * Wrapper for the recursive function which explodes the individuals paths and call the function on them.
  *
  * @param   array   $affiliation_levels array of strings representing the individual paths of the affiliations of a person
+ *
  * @return array    array which contains a hierarchical representation of the paths provided
  */
 function processingAffiliationsToArray(array $affiliation_levels):array{
@@ -640,5 +735,323 @@ function processingAffiliationsToArray(array $affiliation_levels):array{
     }
     // Return the buffer array
     return $output;
+}
+
+/**
+ * This recursive function can be called on a node of the affiliations' array for a
+ * participant and will append the affiliation if it's a leaf or recurse if there
+ * are children.
+ *
+ * @param $root                 DOMElement      Element to which the current node will
+ *                                              append its calculated node
+ * @param $affiliationID        int             Identifier for the affiliation
+ * @param $childAffiliations    Array           Array of the child affiliations
+ *
+ * @return void
+ */
+function affiliationRecursiveNodeWalker(DOMElement &$root, int $affiliationID, array $childAffiliations){
+    // Global variable attached to the DOMDocument element used
+    global $XML;
+    // Array containing the affiliations information indexed by identifier
+    global $affiliations;
+
+    // Creating the affiliation node
+    $AffiliationNode = $XML->createElement("Affiliation");
+
+    // Creating the name node and its text value
+    $AffiliationNameNode = $XML->createElement("Name");
+    $AffiliationNameValue = $XML->createTextNode($affiliations[$affiliationID]["Name"]);
+    // Appending the value to the name node
+    $AffiliationNameNode->appendChild($AffiliationNameValue);
+
+    // Creating the city node and its text value
+    $AffiliationCityNode = $XML->createElement("City");
+    $AffiliationCityValue = $XML->createTextNode($affiliations[$affiliationID]["City"]);
+    // Appending the value to the city node
+    $AffiliationCityNode->appendChild($AffiliationCityValue);
+
+    // Creating the state node
+    $AffiliationStateNode = $XML->createElement("State");
+
+    // Creating the state child node name and its value
+    $AffiliationStateNameNode = $XML->createElement("Name");
+    $AffiliationStateNameValue = $XML->createTextNode($affiliations[$affiliationID]["StateName"]);
+    // Appending the value to the child node
+    $AffiliationStateNameNode->appendChild($AffiliationStateNameValue);
+
+    // Creating the state child node abbreviation and its value
+    $AffiliationStateCodeNode = $XML->createElement("Abbreviation");
+    $AffiliationStateCodeValue = $XML->createTextNode($affiliations[$affiliationID]["StateCode"]);
+    // Appending the value to the child node
+    $AffiliationStateCodeNode->appendChild($AffiliationStateCodeValue);
+
+    // Appending both child nodes to the state node
+    $AffiliationStateNode->appendChild($AffiliationStateNameNode);
+    $AffiliationStateNode->appendChild($AffiliationStateCodeNode);
+
+    // Creating the country node
+    $AffiliationCountryNode = $XML->createElement("Country");
+
+    // Creating the country child node name and its value
+    $AffiliationCountryNameNode = $XML->createElement("Name");
+    $AffiliationCountryNameValue = $XML->createTextNode($affiliations[$affiliationID]["CountryName"]);
+    // Appending its value to the child node
+    $AffiliationCountryNameNode->appendChild($AffiliationCountryNameValue);
+
+    // Creating the country child node abbreviation and its value
+    $AffiliationCountryCodeNode = $XML->createElement("Abbreviation");
+    $AffiliationCountryCodeValue = $XML->createTextNode($affiliations[$affiliationID]["CountryCode"]);
+    // Appending its value to the child node
+    $AffiliationCountryCodeNode->appendChild($AffiliationCountryCodeValue);
+
+    // Appending both child nodes to the country node
+    $AffiliationCountryNode->appendChild($AffiliationCountryNameNode);
+    $AffiliationCountryNode->appendChild($AffiliationCountryCodeNode);
+
+    // Appending the properties nodes to the Affiliation node
+    $AffiliationNode->appendChild($AffiliationNameNode);
+    $AffiliationNode->appendChild($AffiliationCityNode);
+    $AffiliationNode->appendChild($AffiliationStateNode);
+    $AffiliationNode->appendChild($AffiliationCountryNode);
+
+    // Appending the Affiliation node to the provided root node
+    $root->appendChild($AffiliationNode);
+
+    // if the array of child affiliations is not empty
+    if(!empty($childAffiliations)){
+        // for each child affiliation
+        foreach($childAffiliations as $grandChildID => $grandChildAffiliations){
+            // call the recursive function with the affiliation node as a root and the grandchild ID and affiliations
+            affiliationRecursiveNodeWalker($AffiliationNode, $grandChildID, $grandChildAffiliations);
+        }
+    }
+}
+
+/**
+ * Function which takes an array of contributor results, create an XML structure representing each result
+ * and appends said structure to the provided DOMElement to be used as an encompassing group.
+ *
+ * @param   array           $contributors   Array containing the processed SQL results for a group of contributors
+ * @param   DOMElement      $group          DOMElement to which the calculated XML nodes must be appended
+ *
+ * @return void
+ */
+function contributorXMLProcessing(array $contributors, DOMElement &$group){
+    global $XML;
+    global $degrees;
+    global $roles;
+    global $titles;
+    // For all current contributors
+    foreach($contributors as $contributor){
+        // Create the root element of the contributor
+        $root = $XML->createElement("Contributor");
+
+        // Create the name node
+        $NameNode = $XML->createElement("Name");
+
+        // Create a child node of the name node for the full name and its value
+        $FullNameNode = $XML->createElement("FullName");
+        $FullNameValue = $XML->createTextNode($contributor["Full Name"]);
+        // Append its value to the child node
+        $FullNameNode->appendChild($FullNameValue);
+
+        // Create a child node of the name node for the citation name and its value
+        $CitationNameNode = $XML->createElement("CitationName");
+        $CitationNameValue = $XML->createTextNode($contributor["Citation Name"]);
+        // Append its value to the child node
+        $CitationNameNode->appendChild($CitationNameValue);
+
+        // Append both child nodes to the name node
+        $NameNode->appendChild($FullNameNode);
+        $NameNode->appendChild($CitationNameNode);
+
+        // Create the degrees node
+        $DegreesNode = $XML->createElement("Degrees");
+
+        // For each degree ID associated with the contributor
+        foreach($contributor["Degree IDs"] as $degreeID){
+
+            // Create the degree node
+            $degreeNode = $XML->createElement("Degree");
+
+            // Create a child node of the degree node for the name and its value
+            $DegreeNameNode = $XML->createElement("Name");
+            $DegreeNameValue = $XML->createTextNode($degrees[$degreeID]["Degree_Name"]);
+            // Append its value to the child node
+            $DegreeNameNode->appendChild($DegreeNameValue);
+
+            // Create a child node of the degree node for the abbreviation and its value
+            $DegreeAbbreviationNode = $XML->createElement("Abbreviation");
+            $DegreeAbbreviationValue = $XML->createTextNode($degrees[$degreeID]["Abbreviation"]);
+            // Append its value to the child node
+            $DegreeAbbreviationNode->appendChild($DegreeAbbreviationValue);
+
+            // Append both child nodes to the degree node
+            $degreeNode->appendChild($DegreeNameNode);
+            $degreeNode->appendChild($DegreeAbbreviationNode);
+
+            // Append the degree node to the degrees node
+            $DegreesNode->appendChild($degreeNode);
+        }
+
+        // Create the roles node
+        $RolesNode = $XML->createElement("Roles");
+
+        // For each role associated with the contributor
+        foreach($contributor["Role IDs"] as $roleID){
+            // Create a role node
+            $roleNode = $XML->createElement("Role");
+
+            // Create a child node of the role node for the name and its value
+            $RoleNameNode = $XML->createElement("Name");
+            $RoleNameValue = $XML->createTextNode($roles[$roleID]["Name"]);
+            // Append its value to the child node
+            $RoleNameNode->appendChild($RoleNameValue);
+
+            // Append the child node to the role node
+            $roleNode->appendChild($RoleNameNode);
+
+            // Append the role node to the roles node
+            $RolesNode->appendChild($roleNode);
+        }
+
+        // Create the titles node
+        $TitlesNode = $XML->createElement("Titles");
+
+        // For each title associated with the contributor
+        foreach($contributor["Title IDs"] as $titleID){
+            // Create the title node
+            $titleNode = $XML->createElement("Title");
+
+            // Create the child node of the title node for the name and its value
+            $TitleNameNode = $XML->createElement("Name");
+            $TitleNameValue = $XML->createTextNode($titles[$titleID]["Name"]);
+            // Append its value to the child node
+            $TitleNameNode->appendChild($TitleNameValue);
+
+            // Append the child node to the title node
+            $titleNode->appendChild($TitleNameNode);
+
+            // Append the title node the titles node
+            $TitlesNode->appendChild($titleNode);
+        }
+
+        // Create the affiliations node
+        $AffiliationsNode = $XML->createElement("Affiliations");
+
+        // For each affiliation of the contributor
+        foreach($contributor["Affiliation IDs"] as $affiliationID => $childAffiliations){
+            // Use the recursive function to add the affiliations respecting the hierarchy
+            affiliationRecursiveNodeWalker($AffiliationsNode, $affiliationID, $childAffiliations);
+        }
+
+        // Appending the name node to the contributor node
+        $root->appendChild($NameNode);
+        // Appending the degrees node to the contributor node
+        $root->appendChild($DegreesNode);
+        // Appending the roles node to the contributor
+        $root->appendChild($RolesNode);
+        // Appending the titles node to the contributor
+        $root->appendChild($TitlesNode);
+        // Appending the affiliations node to the contributor
+        $root->appendChild($AffiliationsNode);
+
+        // Appending the contributor node to the group node
+        $group->appendChild($root);
+    }
+}
+
+/**
+ * Function which takes the layered Affiliation array of a contributor and uses recursion to returns a flattened
+ * version for use with the TSV file format.
+ *
+ * @param   array   $ContributorAffiliations    Output array containing the affiliations as strings
+ * @param   int     $affiliationID              Affiliation ID of the current affiliation
+ * @param   array   $childAffiliations          Array of the child affiliations of the current affiliation
+ *
+ * @return void
+ */
+function affiliationRecursiveTSVWalker(array &$ContributorAffiliations, int $affiliationID, array $childAffiliations){
+    // Array containing the affiliations information indexed by identifier
+    global $affiliations;
+
+    // Array containing the affiliation information to make the affiliation string
+    $contributorData = array(   $affiliations[$affiliationID]["Name"],
+                                $affiliations[$affiliationID]["City"],
+                                $affiliations[$affiliationID]["StateCode"],
+                                $affiliations[$affiliationID]["CountryCode"]);
+
+    // Adding the affiliation string to the output array
+    $ContributorAffiliations[] = implode(", ", $contributorData);
+
+    // if the array of child affiliations is not empty
+    if(!empty($childAffiliations)){
+        // for each child affiliation
+        foreach($childAffiliations as $grandChildID => $grandChildAffiliations){
+            // call the recursive function with the same output array to flatten the affiliations
+            affiliationRecursiveTSVWalker($ContributorAffiliations, $grandChildID, $grandChildAffiliations);
+        }
+    }
+}
+
+/**
+ * Function which outputs individual TSV entries for each contributor of the group passed.
+ *
+ * @param   array       $contributorGroup   Array containing all the contributors to be processed
+ * @param               $outputBuffer       Reference to the output buffer to which the TSV entries should be written
+ *                                          The lack of type hinting is due to the problem with hinting at a resource or
+ *                                          stream type in this version of PHP
+ * @param   string      $separator          Separator used for the TSV entries
+ * @param   boolean     $active             Boolean to identify whether the contributors processed are active or not
+ *
+ * @return void
+ */
+function contributorTSVProcessing(array $contributorGroup, &$outputBuffer, string $separator, bool $active){
+    global $degrees;
+    global $titles;
+    global $roles;
+
+    foreach($contributorGroup as $contributor){
+        $ContributorData = array();
+
+        $ContributorData["Full Name"] = $contributor["Full Name"];
+        $ContributorData["Citation Name"] = $contributor["Citation Name"];
+
+        $ContributorAffiliations = array();
+
+        foreach($contributor["Affiliation IDs"] as $affiliationID => $childAffiliations){
+            affiliationRecursiveTSVWalker($ContributorAffiliations, $affiliationID, $childAffiliations);
+        }
+
+        $ContributorData["Affiliations"] = implode(" | ", $ContributorAffiliations);
+
+        $ContributorDegrees = array();
+
+        foreach($contributor["Degree IDs"] as $degreeID){
+            $ContributorDegrees[] = $degrees[$degreeID]["Abbreviation"];
+        }
+
+        $ContributorData["Degrees"] = implode(", ", $ContributorDegrees);
+
+        $ContributorTitles = array();
+
+        foreach($contributor["Title IDs"] as $titleID){
+            $ContributorTitles[] = $titles[$titleID]["Abbreviation"];
+        }
+
+        $ContributorData["Titles"] = implode(", ", $ContributorTitles);
+
+        $ContributorRoles = array();
+
+        foreach($contributor["Role IDs"] as $roleID){
+            $ContributorRoles[] = $roles[$roleID]["Name"];
+        }
+
+        $ContributorData["Roles"] = implode(", ", $ContributorRoles);
+
+        $ContributorData["Active"] = $active ? "Active" : "Inactive";
+
+        fputcsv($outputBuffer, $ContributorData, $separator);
+    }
 }
 ?>
