@@ -24,18 +24,18 @@
                 parameter is associated with the publication date of the article, as in all contributors before said
                 date, and the <span class="bold emphasis">authors</span> parameter filters out non-authors.</p>
             <p><span class="bold">For example:</span></p>
-            <p><span class="emphasis">{$baseurl}/acknowledgements/acknowledgements2.php?<span class="bold">date</span>=2023-03-03</span></p>
+            <p><span class="emphasis">{$baseurl}/acknowledgements/acknowledgements.php?<span class="bold">date</span>=2023-03-03</span></p>
             <p><span class="bold">Or</span></p>
-            <p><span class="emphasis">{$baseurl}/acknowledgements/acknowledgements2.php?<span class="bold">date</span>=2023-03-03&<span class="bold">authors</span></span></p>
+            <p><span class="emphasis">{$baseurl}/acknowledgements/acknowledgements.php?<span class="bold">date</span>=2023-03-03&<span class="bold">authors</span></span></p>
         {elseif $error == "2"}
             <p>The date you've entered is invalid. Please respect the format YYYY-MM-DD.</p>
             <p><span class="bold">For example:</span></p>
-            <p><span class="emphasis">{$baseurl}/acknowledgements/acknowledgements2.php?<span class="bold">date</span>=2023-03-03</span></p>
+            <p><span class="emphasis">{$baseurl}/acknowledgements/acknowledgements.php?<span class="bold">date</span>=2023-03-03</span></p>
         {elseif $error == "3"}
             <p>You've tried assigning a value to the <span class="bold emphasis">authors</span> parameter. This parameter is a switch only. Please respect
                 the supported format.</p>
             <p><span class="bold">For example:</span></p>
-            <p><span class="emphasis">{$baseurl}/acknowledgements/acknowledgements2.php?<span class="bold">date</span>=2023-03-03&<span class="bold">authors</span></span></p>
+            <p><span class="emphasis">{$baseurl}/acknowledgements/acknowledgements.php?<span class="bold">date</span>=2023-03-03&<span class="bold">authors</span></span></p>
         {else}
             <p>This element should never be displayed. If you're seeing this, please advise your closest developer.</p>
         {/if}
