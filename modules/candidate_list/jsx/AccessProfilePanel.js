@@ -63,7 +63,7 @@ class AccessProfilePanel extends React.Component {
               message: "Opening profile...",
               className: 'alert alert-info text-center'
             };
-            window.location.href = loris.BaseURL + "/" + state.CandID;
+            window.location.href = loris.BaseURL + '/' + state.CandID + '/';
           } else {
             // display error message
             state.error = {
