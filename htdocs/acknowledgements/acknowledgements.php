@@ -63,7 +63,7 @@ if( !isset($_GET["date"])
 }
 
 // Blocking condition for values being passed to the flag parameter authors
-if ( isset($_GET["authors"]) && !empty($_GET["authors"])){
+if ( isset($_GET["authors"]) && ($_GET["authors"] !== "on" && !empty($_GET["authors"]))){
     // Assigning error message
     $tpl_data["error"] = 3;
     // Passing error message to data object
