@@ -20,7 +20,7 @@
 		<div class="col-sm-10">{$candID}</div>
 	</div>
 	<div class="form-group col-sm-12">
-		<label class="col-sm-2">Subproject</label>
+		<label class="col-sm-2">SubProject Name</label>
 		<div class="col-sm-2">{$form.subprojectID.html}</div>
 	</div>
     {if $pscLabelAdded}
@@ -30,7 +30,7 @@
 	    </div>
     {/if}
 	<div class="form-group col-sm-12">
-		<label class="col-sm-2">Cohort</label>
+		<label class="col-sm-2">SubProject Prefix</label>
 		<div class="col-sm-2">{$form.visitLabel1.html}</div>
 	</div>
         <div class="form-group col-sm-12">

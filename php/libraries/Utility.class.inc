@@ -168,7 +168,7 @@ class Utility
         foreach(range($dob['year'], $testdate['year']) as $year) {
             if(Utility::_IsLeapYear($year) ) {
                 if($year == $testdate['year']) {
-                    if(($testdate['mon'] > 2) || 
+                    if(($testdate['mon'] > 2) ||
                             ($testdate['mon'] == 2 && $testdate['day'] == 29))
                     {
                         $extra++;
@@ -903,8 +903,8 @@ class Utility
     }
 
 
-    /* This needs to be in Utilities, since it depends on both FYI and 
-     * ADI-R, both need to use it. 
+    /* This needs to be in Utilities, since it depends on both FYI and
+     * ADI-R, both need to use it.
      */
     function FlattenID($arr) {
         return $arr['ID'];
@@ -1030,7 +1030,7 @@ class Utility
      * @return array an associative array("projectID" => "project title")
      * @access public
      */
-    static function getProjectList()
+    static function getProjectList(): array
     {
         $factory = NDB_Factory::singleton();
         $DB      = $factory->database();
@@ -1042,7 +1042,47 @@ class Utility
         }
         return $project;
     }
-    
+
+    /**
+     *
+     * Function which returns the ProjectIDs associated with
+     * the CenterIDs passed as parameters.
+     *
+     * @param array $centerIDs  List of CenterIDs to examine for links
+     *                          to ProjectIDs
+     * @return array    Assoc which follows ProjectID => ProjectName
+     */
+    static function getProjectListFromCenterIDs(array $centerIDs): array
+    {
+        // Get handle on the factory singleton
+        $factory = NDB_Factory::singleton();
+        // Handle on the database singleton
+        $DB = $factory->database();
+        // Initializing the projects array
+        $project  = array();
+        // Initializing the prepared parameters array
+        $parameters = array();
+        foreach($centerIDs as $index => $centerID){
+            $parameters[":center" . $index] = $centerID;
+        }
+        $keyString = implode(",", array_keys($parameters));
+        // get the list of projects names keyed on projectIDs
+        $projects = $DB->pselect("
+                                    SELECT
+                                        psr.ProjectID AS ProjectID,
+                                        p.Name AS Name
+                                    FROM Project p
+                                    LEFT JOIN project_psc_rel psr ON (p.ProjectID = psr.ProjectID)
+                                    WHERE psr.CenterID IN ($keyString)",
+                                    $parameters);
+        // Flatten the results
+        foreach ($projects as $row) {
+            $project[$row['ProjectID']] = $row['Name'];
+        }
+        // Return the project array
+        return $project;
+    }
+
     /**
      * Returns a list of study Subprojects
      *
@@ -1083,7 +1123,7 @@ class Utility
     {
         return self::getSubprojectList($projectID);
     }
-    
+
     /**
      * Determine whether an array is a numeric (normal) array or an
      * associative (hashtable) array.
