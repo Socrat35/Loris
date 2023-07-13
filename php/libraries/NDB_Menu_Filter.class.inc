@@ -711,7 +711,7 @@ class NDB_Menu_Filter extends NDB_Menu
         $this->setTemplateVar(
             'csvFile',
             $_REQUEST['test_name']
-            . (isset($_REQUEST['subtest']) ? $_REQUEST['subtest'] : isset($_REQUEST['submenu']) ? $_REQUEST['submenu']: '')
+            . ($_REQUEST['subtest'] ?: $_REQUEST['submenu'] ?: '')
             . date('-Y_m_d')
         );
 
