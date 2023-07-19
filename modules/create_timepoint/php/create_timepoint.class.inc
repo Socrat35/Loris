@@ -424,7 +424,26 @@ class Create_Timepoint extends \NDB_Form
                                 "CTLBL00",
 
                                 /*Lumbar puncture*/
-                                "CTLLP00");
+                                "CTLLP00",
+
+                                /*******************************************************/
+                                /*-------------------- DETECT Cohort  -----------------*/
+                                /*******************************************************/
+
+                                /*Eligibility*/
+                                "DETEL00",
+
+                                /*Enrollment*/
+                                "DETEN00",
+
+                                /*Baseline*/
+                                "DETBL00",
+
+                                /*Lumbar puncture*/
+                                "DETLP00",
+
+                                /*Follow-up*/
+                                "DETFU00","DETFU12", "DETFU24", "DETFU36","DETFU48","DETFU60","DETFU72","DETFU84","DETFU108","DETFU120","DETFU132","DETFU144","DETFU156");
 
         if (!in_array($concatTimePoint,$validTimepoints)) {
             $errors['visitLabel1'] = 'Invalid timepoint!';
