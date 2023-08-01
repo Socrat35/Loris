@@ -436,6 +436,9 @@ class Create_Timepoint extends \NDB_Form
                                 /*Enrollment*/
                                 "DETEN00",
 
+                                /*Adverse Event*/
+                                "DETAE00","DETAE12", "DETAE24", "DETAE36","DETAE48","DETAE60","DETAE72","DETAE84","DETAE108","DETAE120","DETAE132","DETAE144","DETAE156",
+
                                 /*Baseline*/
                                 "DETBL00",
 
