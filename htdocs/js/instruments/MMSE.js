@@ -233,20 +233,20 @@ function bestGuess() {
       season = 'autumn';
     }
     // Assign "best guess" values to the fields
-    $('#1_season_value').val(season);
-    $('#2_country_value').val('Canada');
-    $('#2_province_value').val($('#test_language_select').val() === 'FR' ? 'Québec' : 'Quebec');
-    $('#2_city_value').val($('#test_language_select').val() === 'FR' ? 'Montréal' : 'Montreal');
-    $('#2_location_value').val($('#test_language_select').val() === 'FR' ? 'Hôpital Douglas' : 'Douglas Hospital');
-    $('#2_floor_value').val('2');
-    $('#3_repetitions').val('1');
-    $('#4_item1_value').val($('#question4_option_select').val() === '1' ? '93' : $('#test_language_select').val() === 'FR' ? 'E' : 'D');
-    $('#4_item2_value').val($('#question4_option_select').val() === '1' ? '86' : $('#test_language_select').val() === 'FR' ? 'D' : 'L');
-    $('#4_item3_value').val($('#question4_option_select').val() === '1' ? '79' : $('#test_language_select').val() === 'FR' ? 'N' : 'R');
-    $('#4_item4_value').val($('#question4_option_select').val() === '1' ? '72' : $('#test_language_select').val() === 'FR' ? 'O' : 'O');
-    $('#4_item5_value').val($('#question4_option_select').val() === '1' ? '65' : $('#test_language_select').val() === 'FR' ? 'M' : 'W');
-    $('#6_item1_value').val($('#test_language_select').val() === 'FR' ? 'Crayon' : 'Pencil');
-    $('#6_item2_value').val($('#test_language_select').val() === 'FR' ? 'Montre' : 'Watch');
+    $($('#1_season_value').val(season)).prop('required', true);
+    $($('#2_country_value').val('Canada')).prop('required', true);
+    $($('#2_province_value').val($('#test_language_select').val() === 'FR' ? 'Québec' : 'Quebec')).prop('required', true);
+    $($('#2_city_value').val($('#test_language_select').val() === 'FR' ? 'Montréal' : 'Montreal')).prop('required', true);
+    $($('#2_location_value').val($('#test_language_select').val() === 'FR' ? 'Hôpital Douglas' : 'Douglas Hospital')).prop('required', true);
+    $($('#2_floor_value').val('2')).prop('required', true);
+    $($('#3_repetitions').val('1')).prop('required', true);
+    $($('#4_item1_value').val($('#question4_option_select').val() === '1' ? '93' : $('#test_language_select').val() === 'FR' ? 'E' : 'D')).prop('required', true);
+    $($('#4_item2_value').val($('#question4_option_select').val() === '1' ? '86' : $('#test_language_select').val() === 'FR' ? 'D' : 'L')).prop('required', true);
+    $($('#4_item3_value').val($('#question4_option_select').val() === '1' ? '79' : $('#test_language_select').val() === 'FR' ? 'N' : 'R')).prop('required', true);
+    $($('#4_item4_value').val($('#question4_option_select').val() === '1' ? '72' : $('#test_language_select').val() === 'FR' ? 'O' : 'O')).prop('required', true);
+    $($('#4_item5_value').val($('#question4_option_select').val() === '1' ? '65' : $('#test_language_select').val() === 'FR' ? 'M' : 'W')).prop('required', true);
+    $($('#6_item1_value').val($('#test_language_select').val() === 'FR' ? 'Crayon' : 'Pencil')).prop('required', true);
+    $($('#6_item2_value').val($('#test_language_select').val() === 'FR' ? 'Montre' : 'Watch')).prop('required', true);
     $('#check-inputs-button').trigger('click');
   });
 }
