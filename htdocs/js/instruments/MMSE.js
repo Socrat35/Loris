@@ -232,8 +232,8 @@ function bestGuess() {
     } else {
       season = 'autumn';
     }
-    // Assign "best guess" values to the fields
-    $($('#1_season_value').val(season)).prop('required', true);
+    $('#1_season_value').val(season);
+    // Assign "best guess" values to the text fields
     $($('#2_country_value').val('Canada')).prop('required', true);
     $($('#2_province_value').val($('#test_language_select').val() === 'FR' ? 'Québec' : 'Quebec')).prop('required', true);
     $($('#2_city_value').val($('#test_language_select').val() === 'FR' ? 'Montréal' : 'Montreal')).prop('required', true);
