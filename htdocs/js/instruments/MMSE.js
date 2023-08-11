@@ -132,7 +132,7 @@ function instrumentSettingsEventHandler() {
  */
 function textFieldsEventHandler() {
   // Event handler on changes to the input text fields
-  $('input[type=text]').on('input', function(e) {
+  $('input[type=text]').on('input change blur', function(e) {
     // If the value of the field is empty and the field is required
     if ($(e.target).val() === '' && $(e.target).attr('required') !== undefined) {
       // Set the field required property to false
@@ -194,60 +194,36 @@ function bestGuess() {
   $('#best-guess-button').on('click', function() {
     // Assign the value of the hidden date_taken field to a variable
     let dateString = $('#date_taken').val();
-    // Parse the date string while adding the hours element with our local
-    // timezone and use the milliseconds value produced to make an instance of
-    // a date object
-    let dateObject = new Date(Date.parse(dateString + 'T00:00:00.000'));
-    // Array reflecting the DB values of the days select input
-    let days = {
-      0: 'Su',
-      1: 'Mo',
-      2: 'Tu',
-      3: 'We',
-      4: 'Th',
-      5: 'Fr',
-      6: 'Sa'};
-    // Set the year input to the full year value
-    $('#1_year_value').val(dateObject.getFullYear());
-    // Set the months input to the months +1 since JS starts months at 0
-    $('#1_month_value').val(dateObject.getMonth() + 1);
-    // Set the date input to the date value
-    $('#1_date_value').val(dateObject.getDate());
-    // Set the day input to the day value using the days object
-    $('#1_day_value').val(days[dateObject.getDay()]);
-    // Calculate the day of the year using the difference between the date
-    // object created and the start of the year of the date object
-    let dayOfYear = Math.round((dateObject - new Date(dateObject.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24)) - 1;
-    // Initialize the season variable
-    let season = '';
-    // Magic numbers come from the March 21st(80), June 21st(172),
-    // September 21st(264) and December 21st(355) which are the approximate
-    // season limits for the Northern Hemisphere
-    if (dayOfYear < 80 || dayOfYear >= 355) {
-      season = 'winter';
-    } else if (dayOfYear >= 80 && dayOfYear < 172) {
-      season = 'spring';
-    } else if (dayOfYear >= 172 && dayOfYear < 264) {
-      season = 'summer';
-    } else {
-      season = 'autumn';
-    }
-    $('#1_season_value').val(season);
-    // Assign "best guess" values to the text fields
-    $($('#2_country_value').val('Canada')).prop('required', true);
-    $($('#2_province_value').val($('#test_language_select').val() === 'FR' ? 'Québec' : 'Quebec')).prop('required', true);
-    $($('#2_city_value').val($('#test_language_select').val() === 'FR' ? 'Montréal' : 'Montreal')).prop('required', true);
-    $($('#2_location_value').val($('#test_language_select').val() === 'FR' ? 'Hôpital Douglas' : 'Douglas Hospital')).prop('required', true);
-    $($('#2_floor_value').val('2')).prop('required', true);
-    $($('#3_repetitions').val('1')).prop('required', true);
-    $($('#4_item1_value').val($('#question4_option_select').val() === '1' ? '93' : $('#test_language_select').val() === 'FR' ? 'E' : 'D')).prop('required', true);
-    $($('#4_item2_value').val($('#question4_option_select').val() === '1' ? '86' : $('#test_language_select').val() === 'FR' ? 'D' : 'L')).prop('required', true);
-    $($('#4_item3_value').val($('#question4_option_select').val() === '1' ? '79' : $('#test_language_select').val() === 'FR' ? 'N' : 'R')).prop('required', true);
-    $($('#4_item4_value').val($('#question4_option_select').val() === '1' ? '72' : $('#test_language_select').val() === 'FR' ? 'O' : 'O')).prop('required', true);
-    $($('#4_item5_value').val($('#question4_option_select').val() === '1' ? '65' : $('#test_language_select').val() === 'FR' ? 'M' : 'W')).prop('required', true);
-    $($('#6_item1_value').val($('#test_language_select').val() === 'FR' ? 'Crayon' : 'Pencil')).prop('required', true);
-    $($('#6_item2_value').val($('#test_language_select').val() === 'FR' ? 'Montre' : 'Watch')).prop('required', true);
-    $('#check-inputs-button').trigger('click');
+    // Process the date string to extract the granular information
+    let timeInfos = processDateString(dateString);
+    //
+    // Set the text input values to best guesses
+    //
+    $('#1_year_value').val(timeInfos.year).change();
+    $('#1_month_value').val(timeInfos.month).change();
+    $('#1_date_value').val(timeInfos.date).change();
+    $('#2_country_value').val('Canada').change();
+    $('#2_province_value').val($('#test_language_select').val() === 'FR' ? 'Québec' : 'Quebec').change();
+    $('#2_city_value').val($('#test_language_select').val() === 'FR' ? 'Montréal' : 'Montreal').change();
+    $('#2_location_value').val($('#test_language_select').val() === 'FR' ? 'Hôpital Douglas' : 'Douglas Hospital').change();
+    $('#2_floor_value').val('2').change();
+    $('#3_repetitions').val('1').change();
+    // The magic numbers here come from the question 4 options, which are count
+    // down from 100 by 7s or spell WORLD or MONDE backwards
+    $('#4_item1_value').val($('#question4_option_select').val() === '1' ? '93' : $('#test_language_select').val() === 'FR' ? 'E' : 'D').change();
+    $('#4_item2_value').val($('#question4_option_select').val() === '1' ? '86' : $('#test_language_select').val() === 'FR' ? 'D' : 'L').change();
+    $('#4_item3_value').val($('#question4_option_select').val() === '1' ? '79' : $('#test_language_select').val() === 'FR' ? 'N' : 'R').change();
+    $('#4_item4_value').val($('#question4_option_select').val() === '1' ? '72' : $('#test_language_select').val() === 'FR' ? 'O' : 'O').change();
+    $('#4_item5_value').val($('#question4_option_select').val() === '1' ? '65' : $('#test_language_select').val() === 'FR' ? 'M' : 'W').change();
+    $('#6_item1_value').val($('#test_language_select').val() === 'FR' ? 'Crayon' : 'Pencil').change();
+    $('#6_item2_value').val($('#test_language_select').val() === 'FR' ? 'Montre' : 'Watch').change();
+    //
+    // Set the select controls values to best guesses
+    //
+    $('#1_day_value').val(timeInfos.day).change();
+    $('#1_season_value').val(timeInfos.season).change();
+    // Trigger the check all boxes functions to match the added values
+    $('#check-inputs-button').click();
   });
 }
 
@@ -270,4 +246,55 @@ function addTooltips() {
     // Set the text to the defined tooltip text
     $(e.target).attr('data-original-title', question4ScoringComment);
   });
+}
+
+/**
+ * Function which takes a date string of the 2021-01-01 format and extracts
+ * the year, month, date, day and season, puts the information in an assoc
+ * and returns the object.
+ * @param {string} dateString   Date string using the YYYY-MM-DD format
+ * @return {dictionary}         Object with the properties for year, month,
+ *                              date, day and season
+ */
+function processDateString(dateString) {
+  let dateInfos = {};
+  // Parse the date string while adding the hours element with our local
+  // timezone and use the milliseconds value produced to make an instance of
+  // a date object
+  let dateObject = new Date(Date.parse(dateString + 'T00:00:00.000'));
+  // Array reflecting the DB values of the days select input
+  let days = {
+    0: 'Su',
+    1: 'Mo',
+    2: 'Tu',
+    3: 'We',
+    4: 'Th',
+    5: 'Fr',
+    6: 'Sa'};
+  // Set the year input to the full year value
+  dateInfos.year = dateObject.getFullYear();
+  // Set the months input to the months +1 since JS starts months at 0
+  // and padding to respect the two digits format
+  dateInfos.month = ('0' + (dateObject.getMonth() + 1)).slice(-2);
+  // Set the date input to the date value with padding to respect
+  // the two digits format
+  dateInfos.date = ('0' + dateObject.getDate()).slice(-2);
+  // Set the day input to the day value using the days object
+  dateInfos.day = days[dateObject.getDay()];
+  // Calculate the day of the year using the difference between the date
+  // object created and the start of the year of the date object
+  let dayOfYear = Math.round((dateObject - new Date(dateObject.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24)) - 1;
+  // Magic numbers come from the March 21st(80), June 21st(172),
+  // September 21st(264) and December 21st(355) which are the approximate
+  // season limits for the Northern Hemisphere
+  if (dayOfYear < 80 || dayOfYear >= 355) {
+    dateInfos.season = 'winter';
+  } else if (dayOfYear >= 80 && dayOfYear < 172) {
+    dateInfos.season = 'spring';
+  } else if (dayOfYear >= 172 && dayOfYear < 264) {
+    dateInfos.season = 'summer';
+  } else {
+    dateInfos.season = 'autumn';
+  }
+  return dateInfos;
 }
