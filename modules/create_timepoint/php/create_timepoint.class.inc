@@ -298,6 +298,15 @@ class Create_Timepoint extends \NDB_Form
                                 /*Follow-Up*/
                                 "PREFU12","PREFU24","PREFU36","PREFU48","PREFU60","PREFU72","PREFU84","PREFU96","PREFU108","PREFU120","PREFU132","PREFU144","PREFU156",
 
+                                /*PET Scan Amyloid*/
+                                "PREPA00","PREPA06","PREPA12","PREPA24","PREPA36","PREPA48","PREPA60","PREPA72","PREPA84","PREPA96","PREPA108","PREPA120","PREPA132","PREPA144","PREPA156",
+
+                                /*PET Scan Choline*/
+                                "PREPC00","PREPC06","PREPC12","PREPC24","PREPC36","PREPC48","PREPC60","PREPC72","PREPC84","PREPC96","PREPC108","PREPC120","PREPC132","PREPC144","PREPC156",
+
+                                /*PET Scan Tau*/
+                                "PREPT00","PREPT06","PREPT12","PREPT24","PREPT36","PREPT48","PREPT60","PREPT72","PREPT84","PREPT96","PREPT108","PREPT120","PREPT132","PREPT144","PREPT156",
+
                                 /*Adverse Event*/
                                 "PREAE00","PREAE01","PREAE03","PREAE06","PREAE09","PREAE12","PREAE15","PREAE18","PREAE21","PREAE24","PREAE30","PREAE36","PREAE42","PREAE48",
 
@@ -331,6 +340,15 @@ class Create_Timepoint extends \NDB_Form
 
                                 /*Follow-up*/
                                 "NAPFU03","NAPFU06","NAPFU12","NAPFU18","NAPFU24","NAPFU36","NAPFU48","NAPFU60","NAPFU72","NAPFU84","NAPFU96","NAPFU108","NAPFU120","NAPFU132","NAPFU144","NAPFU156",
+
+                                /*PET Scan Amyloid*/
+                                "NAPPA00","NAPPA03","NAPPA06","NAPPA12","NAPPA18","NAPPA24","NAPPA36","NAPPA48","NAPPA60","NAPPA72","NAPPA84","NAPPA96","NAPPA108","NAPPA120","NAPPA132","NAPPA144","NAPPA156",
+
+                                /*PET Scan Choline*/
+                                "NAPPC00","NAPPC03","NAPPC06","NAPPC12","NAPPC18","NAPPC24","NAPPC36","NAPPC48","NAPPC60","NAPPC72","NAPPC84","NAPPC96","NAPPC108","NAPPC120","NAPPC132","NAPPC144","NAPPC156",
+
+                                /*PET Scan Tau*/
+                                "NAPPT00","NAPPT03","NAPPT06","NAPPT12","NAPPT18","NAPPT24","NAPPT36","NAPPT48","NAPPT60","NAPPT72","NAPPT84","NAPPT96","NAPPT108","NAPPT120","NAPPT132","NAPPT144","NAPPT156",
 
                                 /*Adverse event*/
                                 "NAPAE00","NAPAE01","NAPAE03","NAPAE06","NAPAE09","NAPAE12","NAPAE15","NAPAE18","NAPAE21","NAPAE24","NAPAE30","NAPAE36","NAPAE42","NAPAE48",
@@ -385,6 +403,15 @@ class Create_Timepoint extends \NDB_Form
                                 /*Enrollment*/
                                 "YNGEN00",
 
+                                /*PET Scan Amyloid*/
+                                "YNGPA00",
+
+                                /*PET Scan Choline*/
+                                "YNGPC00",
+
+                                /*PET Scan Tau*/
+                                "YNGPT00",
+
                                 /*Baseline*/
                                 "YNGBL00",
 
@@ -408,7 +435,16 @@ class Create_Timepoint extends \NDB_Form
                                 "MCILP00",
 
                                 /*Follow-up*/
-                                "MCIFU00","MCIFU12", "MCIFU24", "MCIFU36","MCIFU48","MCIFU60","MCIFU72","MCIFU84","MCIFU108","MCIFU120","MCIFU132","MCIFU144","MCIFU156",
+                                "MCIFU00","MCIFU12","MCIFU24","MCIFU36","MCIFU48","MCIFU60","MCIFU72","MCIFU84","MCIFU108","MCIFU120","MCIFU132","MCIFU144","MCIFU156",
+
+                                /*PET Scan Amyloid*/
+                                "MCIPA00","MCIPA12","MCIPA24","MCIPA36","MCIPA48","MCIPA60","MCIPA72","MCIPA84","MCIPA108","MCIPA120","MCIPA132","MCIPA144","MCIPA156",
+
+                                /*PET Scan Choline*/
+                                "MCIPC00","MCIPC12","MCIPC24","MCIPC36","MCIPC48","MCIPC60","MCIPC72","MCIPC84","MCIPC108","MCIPC120","MCIPC132","MCIPC144","MCIPC156",
+
+                                /*PET Scan Tau*/
+                                "MCIPT00","MCIPT12","MCIPT24","MCIPT36","MCIPT48","MCIPT60","MCIPT72","MCIPT84","MCIPT108","MCIPT120","MCIPT132","MCIPT144","MCIPT156",
 
                                 /*******************************************************/
                                 /*-------------------- CTL Cohort  --------------------*/
@@ -446,7 +482,16 @@ class Create_Timepoint extends \NDB_Form
                                 "DETLP00",
 
                                 /*Follow-up*/
-                                "DETFU00","DETFU12", "DETFU24", "DETFU36","DETFU48","DETFU60","DETFU72","DETFU84","DETFU108","DETFU120","DETFU132","DETFU144","DETFU156");
+                                "DETFU00","DETFU12","DETFU24","DETFU36","DETFU48","DETFU60","DETFU72","DETFU84","DETFU108","DETFU120","DETFU132","DETFU144","DETFU156",
+
+                                /*PET Scan Amyloid*/
+                                "DETPA00","DETPA12","DETPA24","DETPA36","DETPA48","DETPA60","DETPA72","DETPA84","DETPA108","DETPA120","DETPA132","DETPA144","DETPA156",
+
+                                /*PET Scan Choline*/
+                                "DETPC00","DETPC12","DETPC24","DETPC36","DETPC48","DETPC60","DETPC72","DETPC84","DETPC108","DETPC120","DETPC132","DETPC144","DETPC156",
+
+                                /*PET Scan Tau*/
+                                "DETPT00","DETPT12","DETPT24","DETPT36","DETPT48","DETPT60","DETPT72","DETPT84","DETPT108","DETPT120","DETPT132","DETPT144","DETPT156");
 
         if (!in_array($concatTimePoint,$validTimepoints)) {
             $errors['visitLabel1'] = 'Invalid timepoint!';
