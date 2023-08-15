@@ -5,6 +5,7 @@
  */
 
 'use strict';
+
 // Object containing a color gradient from green to red in percentages by
 // increments of 5.
 // Source: https://stackoverflow.com/questions/4161369/html-color-codes-red-to-yellow-to-green
