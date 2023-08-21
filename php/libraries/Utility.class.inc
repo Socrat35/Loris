@@ -11,6 +11,8 @@
  * @license  http://www.gnu.org/licenses/gpl-3.0.txt GPLv3
  * @link     https://www.github.com/aces/Loris/
  */
+
+
 /**
  * A class for holding a set of (static) utility/helper functions in a
  * single namespace.
@@ -29,163 +31,6 @@ class Utility
     private function __construct()
     {
     }
-
-    /**
-     * This is identical to PEAR::isError from PEAR only the function
-     * has the static keyword. This is required because PEAR::isError
-     * being called staticly throws a warning in newer versions of PHP
-     * It should be used everywhere in the code instead of PEAR::isError
-     *
-     * @param object         $data The data to check if it is an error
-     * @param string|integer $code If a string, check that data also has
-     *                             the message of $code before returning true.
-     *                             If an integer, the error must also have
-     *                             the same error code for isErrorX to be
-     *                             true
-     *
-     * @return boolean true if data is a PEAR error object
-     */
-    static function isErrorX($data, $code=null)
-    {
-        throw new LorisException(
-            "Utility::isErrorX has been deprecated. Use PHP5 exceptions instead."
-        );
-    }
-
-
-    /**
-     * Builds a query string
-     *
-     * @param  array   Array of parameters to put into query string
-     * @return string
-     * @access public
-     */
-    function unparse_str ($params) {
-        $str = '';
-        foreach ($params as $key => $value) {
-            if(is_array($value)) {
-                foreach($value AS $vkey => $vval) {
-                    $str .= (strlen($str) < 1) ? '' : '&';
-                    $str .= $key . rawurlencode("[$vkey]") . '=' . rawurlencode($vval);
-                }
-            } else {
-                $str .= (strlen($str) < 1) ? '' : '&';
-                $str .= $key . '=' . rawurlencode($value);
-            }
-        }
-        return ($str);
-    }
-
-    /**
-     * Return the number of columns to use before the quat table scripts
-     * overflow into a new table. This information comes from the config.xml.
-     *
-     * @return integer Column threshold from config file
-     * @note   Function should be either removed or moved to NDB_Config
-     * @note   Function comment written by Dave, who can't remember if he's
-     *       the author of this function.
-     *
-     * @cleanup
-     */
-    static function getColumnThresholdCount()
-    {
-        $config =& NDB_Config::singleton();
-        // get the list of Subprojects
-        $column_threshold = $config->getSetting('columnThreshold');
-        return $column_threshold;
-    }
-
-    /**
-     * Converts a multi-dimensional array to a one-dimensional array
-     *
-     * @param array $array The multi-dimensional array
-     *
-     * @return string
-     *
-     * @deprecated
-     */
-    static function reduce($array)
-    {
-        throw new DeprecatedException(
-            "Utility::reduce has been deprecated."
-        );
-    }
-    /**
-     * Implodes a multi-dimensional array using array_reduce()
-     *
-     * @param mixed $x Unknown
-     * @param mixed $y Unknown
-     *
-     * @note If any element of the array contains a backtick, you'll run into trouble
-     *
-     * @return string
-     *
-     * @deprecated
-     */
-    static function crunch($x, $y)
-    {
-        throw new DeprecatedException(
-            "Utility::crunch has been deprecated."
-        );
-    }
-
-
-    function _daysInPrevMonth($month, $year) {
-        if($month == 1) {
-            return Utility::_daysInMonth(12, $year-1);
-        }
-        return Utility::_daysInMonth($month-1, $year);
-    }
-    function _daysInMonth($month, $year, $calcLeapYear = true) {
-        /* Thirty days has September (9), April (4), June (6), and November (11)
-           all the rest have 31 except February, etc etc */
-        $thirty_days = array(4, 6, 9, 11);
-        if($month == 2) {
-            if($calcLeapYear == false) {
-                return 28;
-            }
-            if(Utility::_IsLeapYear($year)) {
-                return 29;
-            }
-            return 28;
-        }
-        if(!in_array($month, $thirty_days)) {
-            return 31;
-        }
-        return 30;
-    }
-    function _IsLeapYear($year) {
-        if($year % 400 == 0)
-            return true;
-        if($year % 100 == 0)
-            return false;
-        if($year % 4 == 0 )
-            return true;
-        return false;
-    }
-    function _ExtraLeapDays($testdate, $dob) {
-        $extra = 0;
-        foreach(range($dob['year'], $testdate['year']) as $year) {
-            if(Utility::_IsLeapYear($year) ) {
-                if($year == $testdate['year']) {
-                    if(($testdate['mon'] > 2) ||
-                            ($testdate['mon'] == 2 && $testdate['day'] == 29))
-                    {
-                        $extra++;
-                    }
-                } elseif($year == $dob['year']) {
-                    if($dob['mon'] <= 2)
-                    {
-                        $extra++;
-                    }
-                } else {
-                    $extra++;
-                }
-            }
-        }
-        return $extra;
-    }
-
 
     /**
      * Computes an age in years:months:days (assumes 30 days per months)
@@ -208,10 +53,11 @@ class Utility
             );
         }
         $dob = array(
-                'year' => $matches[1],
-                'mon'  => $matches[2],
-                'day'  => $matches[3],
-               );
+            'year' => $matches[1],
+            'mon'  => $matches[2],
+            'day'  => $matches[3],
+        );
+
         if (!preg_match(
             "/([0-9]{4})-?([0-9]{1,2})-?([0-9]{1,2})/",
             $testdate,
@@ -222,10 +68,11 @@ class Utility
             );
         }
         $testdate = array(
-                     'year' => $matches[1],
-                     'mon'  => $matches[2],
-                     'day'  => $matches[3],
-                    );
+            'year' => $matches[1],
+            'mon'  => $matches[2],
+            'day'  => $matches[3],
+        );
+
         if ($testdate['day'] < $dob['day']) {
             $testdate['day'] += 30;
             $testdate['mon']--;
@@ -234,37 +81,15 @@ class Utility
             $testdate['mon'] += 12;
             $testdate['year']--;
         }
+
         $age = array(
-                'year' => $testdate['year'] - $dob['year'],
-                'mon'  => $testdate['mon'] - $dob['mon'],
-                'day'  => $testdate['day'] - $dob['day'],
-               );
+            'year' => $testdate['year'] - $dob['year'],
+            'mon'  => $testdate['mon'] - $dob['mon'],
+            'day'  => $testdate['day'] - $dob['day'],
+        );
+
         return $age;
     }
-
-
-    /**
-     * Returns a list of available ethnicities that can be assigned to subjects
-     *
-     * @return array       an associative array("ethnicity" => "ethnicity")
-     * @access public
-     * @static
-     */
-    function getEthnicityList()
-    {
-        $DB =& Database::singleton();
-        // get the list of ethnicities
-        $query = "SELECT DISTINCT Race as Ethnicity FROM ethnic WHERE Race <> ''";
-        // execute the query
-        $DB->select($query, $result);
-        // fix the array
-        $list = array();
-        foreach ($result as $row) {
-            $list[$row["Ethnicity"]] = $row["Ethnicity"];
-        }
-        return $list;
-    }
-
 
     /**
      * Returns a list of existing ethnicities of all candidates
@@ -278,13 +103,16 @@ class Utility
     static function getListOfSubjectEthnicities()
     {
         $DB =& Database::singleton();
+
         // get the list of ethnicities
         $query = "SELECT DISTINCT Ethnicity
             FROM candidate
             WHERE Ethnicity NOT IN (NULL, '')
             ORDER BY Ethnicity";
         // execute the query
+
         $result = $DB->pselect($query, array());
+
         // fix the array
         $list = array();
         foreach ($result as $row) {
@@ -294,29 +122,25 @@ class Utility
     }
 
     /**
-     * Returns a list of study sites
+     * Returns a list of sites in the database
      *
-     * Study site if a site that actively collects study data
+     * @param bool $study_site If true only return sites that are
+     *                         study sites according to the psc
+     *                         table
      *
-     * @params bool        return only study sites, or not
-     * @return array       an associative array("center ID" => "site name")
-     * @access public
-     * @static
+     * @return array an associative array("center ID" => "site name")
      */
-    function getSiteList($study_site = true, $DCC = true)
+    static function getSiteList($study_site = true)
     {
         $DB =& Database::singleton();
+
         // get the list of study sites - to be replaced by the Site object
         $query = "SELECT CenterID, Name FROM psc ";
         if ($study_site) {
-            if (!$DCC)
-                $query .= "WHERE Study_site='Y' AND Name != 'DCC'";
-        }
-        else {
-            if (!$DCC)
-                $query .= "WHERE Name != 'DCC'";
+            $query .= "WHERE Study_site='Y'";
         }
         $result = $DB->pselect($query, array());
+
         // fix the array
         $list = array();
         foreach ($result as $row) {
@@ -325,6 +149,7 @@ class Utility
         natcasesort($list);
         return $list;
     }
+
 
     /**
      * Get the list of sites as an associative array
@@ -341,6 +166,7 @@ class Utility
     static function getAssociativeSiteList($study_site = true, $DCC = true)
     {
         $DB =& Database::singleton();
+
         // get the list of study sites - to be replaced by the Site object
         $query = "SELECT CenterID, Name FROM psc ";
         if ($study_site) {
@@ -349,7 +175,9 @@ class Utility
         if (!$DCC) {
             $query .= " AND Name != 'DCC'";
         }
+
         $result = $DB->pselect($query, array());
+
         // fix the array
         $list = array();
         foreach ($result as $row) {
@@ -357,8 +185,6 @@ class Utility
         }
         return $list;
     }
-
-
 
     /**
      * Gets a list of visits used by the database as specified from
@@ -369,13 +195,78 @@ class Utility
     static function getVisitList()
     {
         $DB =& Database::singleton();
+
         $query = "SELECT Visit_label from Visit_Windows ORDER BY Visit_label";
+
         $result = $DB->pselect($query, array());
+
         $list = array();
         foreach ($result as $row) {
             $list[$row["Visit_label"]] = ucfirst($row["Visit_label"]);
         }
         return $list;
+    }
+
+    /**
+     * Returns a list of study Projects
+     *
+     * @return array an associative array("projectID" => "project title")
+     * @access public
+     */
+    static function getProjectList()
+    {
+        $factory = NDB_Factory::singleton();
+        $DB      = $factory->database();
+        // get the list of projects
+        $projects = $DB->pselect("SELECT * FROM Project", array());
+        $project  = array();
+        foreach ($projects as $row) {
+            $project[$row['ProjectID']] = $row['Name'];
+        }
+        return $project;
+    }
+
+    /**
+     * Returns a list of study Subprojects
+     *
+     * @param integer $projectID The project for which you would like
+     *                           to get the subprojects
+     *
+     * @return array       an associative array("SubprojectID" => "Subproject title")
+     */
+    static function getSubprojectList($projectID = null)
+    {
+        $factory = NDB_Factory::singleton();
+        $DB      = $factory->database();
+
+        if (!is_null($projectID)) {
+            $subprojects = $DB->pselect(
+                "SELECT * FROM subproject " .
+                "JOIN project_rel USING (SubprojectID) WHERE ProjectID=:pID",
+                array('pID' => $projectID)
+            );
+        } else {
+            $subprojects = $DB->pselect("SELECT * FROM subproject", array());
+        }
+
+        $subprojs = array();
+        foreach ($subprojects as $row) {
+            $subprojs[$row['SubprojectID']] = $row['title'];
+        }
+        return $subprojs;
+    }
+
+    /**
+     * Returns a list of study Subprojects associated with a project
+     *
+     * @param integer $projectID The project for which you would like
+     *                           to get the subprojects
+     *
+     * @return array an associative array("SubprojectID" => "Subproject title")
+     */
+    static function getSubprojectsForProject($projectID = null)
+    {
+        return self::getSubprojectList($projectID);
     }
 
     /**
@@ -392,8 +283,10 @@ class Utility
     static function getTestNameByCommentID($commentID)
     {
         $db =& Database::singleton();
+
         $query    = "SELECT Test_name FROM flag WHERE CommentID=:CID";
         $testName = $db->pselectOne($query, array('CID' => $commentID));
+
         return $testName;
     }
 
@@ -441,30 +334,37 @@ class Utility
         $regex = "";
         foreach ($seqs AS $seq) {
             $unit = "";
+
             switch($seq['@']['type']) {
-            case 'alpha':
-                $unit .= '[a-z]';
-                break;
-            case 'alphanumeric':
-                $unit .= '[0-9a-z]';
-                break;
-            case 'numeric':
-                $unit .= '[0-9]';
-                break;
-            case 'static':
-                $unit .= '('.$seq['#'].')';
-                break;
-            case 'set':
-                if (strpos($seq['#'], '|') !== false) {
+                case 'alpha':
+                    $unit .= '[a-z]';
+                    break;
+
+                case 'alphanumeric':
+                    $unit .= '[0-9a-z]';
+                    break;
+
+                case 'numeric':
+                    $unit .= '[0-9]';
+                    break;
+
+                case 'static':
                     $unit .= '('.$seq['#'].')';
-                } else {
-                    $unit .= '['.$seq['#'].']';
-                }
-                break;
-            case 'siteAbbrev':
-                $unit .= $siteAbbrev;
-                break;
+                    break;
+
+                case 'set':
+                    if (strpos($seq['#'], '|') !== false) {
+                        $unit .= '('.$seq['#'].')';
+                    } else {
+                        $unit .= '['.$seq['#'].']';
+                    }
+                    break;
+
+                case 'siteAbbrev':
+                    $unit .= $siteAbbrev;
+                    break;
             } // end switch
+
             $length = "";
             if (isset($seq['@']['length'])) {
                 $length .= $seq['@']['length'];
@@ -473,7 +373,9 @@ class Utility
             } else {
                 $length .= '1';
             }
+
             $length .= ',';
+
             if (isset($seq['@']['length'])) {
                 $length .= $seq['@']['length'];
             } elseif (isset($seq['@']['maxLength'])) {
@@ -483,11 +385,13 @@ class Utility
             ) {
                 $length .= '1';
             }
+
             $regex .= $unit.'{'.$length.'}';
+
         } // end foreach seq
+
         return '/^'.$regex.'$/i';
     }
-
 
     /**
      * Merges two arrays recursively, overwriting values of the first
@@ -527,7 +431,6 @@ class Utility
         return $merged_array;
     }
 
-
     /**
      * Returns a list of bvl instruments
      *
@@ -542,29 +445,34 @@ class Utility
     static function lookupBattery($age, $stage=null)
     {
         $DB =& Database::singleton();
+
         // craft the select query
         $query  = "SELECT t.Test_name FROM test_battery AS b, test_names AS t
             WHERE t.Test_name=b.Test_name
             AND b.AgeMinDays<=:CandAge AND b.AgeMaxDays>=:CandAge
             AND b.Active='Y'";
         $params = array('CandAge' => $age);
+
         if (!is_null($stage)) {
             $query .= " AND b.Stage=:BatStage";
             $params['BatStage'] = $stage;
         }
+
         $query .= " GROUP BY Test_name ORDER BY Test_name";
+
         // get the list of instruments
         $rows  = array();
         $tests = array();
         $rows  = $DB->pselect($query, $params);
+
         // repackage the array
         foreach ($rows AS $row) {
             $tests[] = $row['Test_name'];
         }
+
         // return an array of test names
         return $tests;
     }
-
 
     /**
      * Ensures that $var is a collection of $var elements, not just a
@@ -586,6 +494,7 @@ class Utility
         }
         return $var;
     }
+
     /**
      * Ensures that $var is a collection elements, not just a single element
      * Not the same as toArray, apparently.
@@ -604,7 +513,6 @@ class Utility
         }
         return $var;
     }
-
 
     /**
      * Explodes an encapsulted, delimited string like
@@ -626,20 +534,22 @@ class Utility
         $state        =0;
         $output       =$string;
         $output_index =0;
+
         for ($i=0;$i<strlen($string);$i++) {
             switch ($string[$i]) {
-            case $delimiter:
-                if ($string[$i-1]!="\\") {
-                    $output =substr_replace($output, "", $output_index, 1);
-                    $output_index--;
-                }
-                break;
-            case $seperator:
-                if ($state%2==0) {
-                    $output        =substr_replace($output, "{@}", $output_index, 1);
-                    $output_index +=2;
-                }
-                break;
+                case $delimiter:
+                    if ($string[$i-1]!="\\") {
+                        $output =substr_replace($output, "", $output_index, 1);
+                        $output_index--;
+                    }
+                    break;
+
+                case $seperator:
+                    if ($state%2==0) {
+                        $output        =substr_replace($output, "{@}", $output_index, 1);
+                        $output_index +=2;
+                    }
+                    break;
             }
             $output_index++;
         }
@@ -671,19 +581,6 @@ class Utility
         return $Zoo;
     }
 
-
-    // from php.net comments
-    function in_array_insensitive($item, $array) {
-        $item = &strtoupper($item);
-        foreach($array as $element) {
-            if ($item == strtoupper($element)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
     /**
      * Replace the empty string with null in specified field
      * in an array passed in as an argument. This undoes the
@@ -712,8 +609,6 @@ class Utility
         return $arr;
     }
 
-
-
     /**
      * Now that Loris requires PHP >5.3 places that use this code should be
      * updated to use a closure.
@@ -741,6 +636,7 @@ class Utility
     {
         return $Arr['Test_name'];
     }
+
     /**
      * Now that Loris requires PHP >5.3 places that use this code should be
      * updated to use a closure.
@@ -769,7 +665,6 @@ class Utility
         return $Arr['Full_name'];
     }
 
-
     /**
      * Get a list of instruments installed in Loris.
      *
@@ -790,16 +685,7 @@ class Utility
                 $instruments[$row['Test_name']] =$row['Full_name'];
             }
         }
-        return $instruments;
-    }
 
-
-    function getAllInstrumentsExcept($exception) {
-        $DB =& Database::singleton();
-        $instruments_q = $DB->pselect("SELECT Test_name,Full_name FROM test_names where Test_name!=:exception", array('exception'=>$exception));
-        foreach($instruments_q as $key){
-            $instruments[$key['Test_name']]=$key['Full_name'];
-        }
         return $instruments;
     }
 
@@ -851,8 +737,10 @@ class Utility
         foreach ($instruments_q as $key) {
             $instruments[$key['Test_name']] =$key['Full_name'];
         }
+
         return $instruments;
     }
+
     /**
      * Get a list of all instruments which have scoring implemented.
      * Used in statistics module.
@@ -871,7 +759,6 @@ class Utility
         }
         return $Scored;
     }
-
 
     /**
      * Return the score columns which exist for a given instrument.
@@ -903,11 +790,23 @@ class Utility
     }
 
 
-    /* This needs to be in Utilities, since it depends on both FYI and
-     * ADI-R, both need to use it.
+    /**
+     * Return the number of columns to use before the quat table scripts
+     * overflow into a new table. This information comes from the config.xml.
+     *
+     * @return integer Column threshold from config file
+     * @note   Function should be either removed or moved to NDB_Config
+     * @note   Function comment written by Dave, who can't remember if he's
+     *       the author of this function.
+     *
+     * @cleanup
      */
-    function FlattenID($arr) {
-        return $arr['ID'];
+    static function getColumnThresholdCount()
+    {
+        $config =& NDB_Config::singleton();
+        // get the list of Subprojects
+        $column_threshold = $config->getSetting('columnThreshold');
+        return $column_threshold;
     }
 
     /**
@@ -959,6 +858,7 @@ class Utility
             JOIN psc ON (s.CenterID = psc.CenterID)
             WHERE s.Active = 'Y' AND c.Active= 'Y'
             AND f.Test_name = :tn AND psc.Centerid!= '1'";
+
         $visitlabels = $db->pselect($query, array('tn' => $test_name));
         return $visitlabels;
     }
@@ -1023,128 +923,6 @@ class Utility
         return $test_name;
     }
 
-
-    /**
-     * Returns a list of study Projects
-     *
-     * @return array an associative array("projectID" => "project title")
-     * @access public
-     */
-    static function getProjectList(): array
-    {
-        $factory = NDB_Factory::singleton();
-        $DB      = $factory->database();
-        // get the list of projects
-        $projects = $DB->pselect("SELECT * FROM Project", array());
-        $project  = array();
-        foreach ($projects as $row) {
-            $project[$row['ProjectID']] = $row['Name'];
-        }
-        return $project;
-    }
-
-    /**
-     *
-     * Function which returns the ProjectIDs associated with
-     * the CenterIDs passed as parameters.
-     *
-     * @param array $centerIDs  List of CenterIDs to examine for links
-     *                          to ProjectIDs
-     * @return array    Assoc which follows ProjectID => ProjectName
-     */
-    static function getProjectListFromCenterIDs(array $centerIDs): array
-    {
-        // Get handle on the factory singleton
-        $factory = NDB_Factory::singleton();
-        // Handle on the database singleton
-        $DB = $factory->database();
-        // Initializing the projects array
-        $project  = array();
-        // Initializing the prepared parameters array
-        $parameters = array();
-        foreach($centerIDs as $index => $centerID){
-            $parameters[":center" . $index] = $centerID;
-        }
-        $keyString = implode(",", array_keys($parameters));
-        // get the list of projects names keyed on projectIDs
-        $projects = $DB->pselect("
-                                    SELECT
-                                        psr.ProjectID AS ProjectID,
-                                        p.Name AS Name
-                                    FROM Project p
-                                    LEFT JOIN project_psc_rel psr ON (p.ProjectID = psr.ProjectID)
-                                    WHERE psr.CenterID IN ($keyString)",
-                                    $parameters);
-        // Flatten the results
-        foreach ($projects as $row) {
-            $project[$row['ProjectID']] = $row['Name'];
-        }
-        // Return the project array
-        return $project;
-    }
-
-    /**
-     * Returns a list of study Subprojects
-     *
-     * @param integer $projectID The project for which you would like
-     *                           to get the subprojects
-     *
-     * @return array       an associative array("SubprojectID" => "Subproject title")
-     */
-    static function getSubprojectList($projectID = null)
-    {
-        $factory = NDB_Factory::singleton();
-        $DB      = $factory->database();
-        $config  = $factory->config();
-        if (!is_null($projectID)) {
-            $subprojects = $DB->pselect(
-                "SELECT * FROM subproject " .
-                "JOIN project_rel USING (SubprojectID) WHERE ProjectID=:pID",
-                array('pID' => $projectID)
-            );
-        } else {
-            $subprojects = $DB->pselect("SELECT * FROM subproject", array());
-        }
-        $subprojs = array();
-        foreach ($subprojects as $row) {
-            $subprojs[$row['SubprojectID']] = $row['title'];
-        }
-        return $subprojs;
-    }
-    /**
-     * Returns a list of study Subprojects associated with a project
-     *
-     * @param integer $projectID The project for which you would like
-     *                           to get the subprojects
-     *
-     * @return array an associative array("SubprojectID" => "Subproject title")
-     */
-    static function getSubprojectsForProject($projectID = null)
-    {
-        return self::getSubprojectList($projectID);
-    }
-
-    /**
-     * Determine whether an array is a numeric (normal) array or an
-     * associative (hashtable) array.
-     *
-     * @param array $arr The array to be checked for numeric keys.
-     *
-     * @return boolean True if the given parameter is an array with
-     *                 numeric keys, false otherwise.
-     */
-    static function numericArray($arr)
-    {
-        if (!is_array($arr)) {
-            return false;
-        }
-        $keys = array_keys($arr);
-        if (count($keys) === 0) {
-            return false;
-        }
-        return isset($arr[0]);
-    }
-
     /**
      * Get all the sourcefrom instruments from parameter_type (which
      * exist in the data_integrity flag table)
@@ -1158,6 +936,7 @@ class Utility
     static function getSourcefrom()
     {
         $DB =& Database::singleton();
+
         $sourcefrom = $DB->pselect(
             "SELECT DISTINCT t.Full_name FROM parameter_type pt
             JOIN data_integrity_flag di ON (pt.Name = di.Name)
@@ -1166,6 +945,7 @@ class Utility
             ORDER BY t.Full_name",
             array()
         );
+
         foreach ($sourcefrom as $table) {
             if (!is_null($table)) {
                 $result[$table['Full_name']] = $table['Full_name'];
@@ -1173,6 +953,7 @@ class Utility
         }
         return $result;
     }
+
     /**
      * Returns all the sourcefrom instruments from parameter_type
      *
@@ -1225,6 +1006,8 @@ class Utility
         }
         return $sourcefields;
     }
+
+
     /**
      * Returns a list of study Visit Labels that are being used by this study.
      *
@@ -1245,6 +1028,7 @@ class Utility
         $factory = NDB_Factory::singleton();
         $db      = $factory->database();
         $qparams = array();
+
         if ($projectID != null) {
             $ExtraProject_Criteria
                 = ' AND (c.ProjectID IS NULL OR c.ProjectID=:ProjectID)';
@@ -1268,6 +1052,7 @@ class Utility
         }
         return $visits;
     }
+
     /**
      * Get all the instruments which currently exist for a given visit label
      * in the database.
@@ -1306,9 +1091,30 @@ class Utility
                 array('vl' => $visit_label)
             );
         }
+
         return $test_names;
     }
 
+    /**
+     * Determine whether an array is a numeric (normal) array or an
+     * associative (hashtable) array.
+     *
+     * @param array $arr The array to be checked for numeric keys.
+     *
+     * @return boolean True if the given parameter is an array with
+     *                 numeric keys, false otherwise.
+     */
+    static function numericArray($arr)
+    {
+        if (!is_array($arr)) {
+            return false;
+        }
+        $keys = array_keys($arr);
+        if (count($keys) === 0) {
+            return false;
+        }
+        return isset($arr[0]);
+    }
 
     /**
      * This function takes two strings. If one string has a
@@ -1359,24 +1165,26 @@ class Utility
         return $prefixStr;
     }
 
-
     /**
-    * Coverts array into CSV string
-    *
-    * @param array $array the array to be converted
-    *
-    * @return string CSV string of data
-    */
+     * Coverts array into CSV string
+     *
+     * @param array $array the array to be converted
+     *
+     * @return string CSV string of data
+     */
     static function arrayToCSV($array)
     {
         $fp = fopen("php://temp", 'w+');
+
         fputcsv($fp, $array['headers']);
         foreach ($array['data'] as $item) {
             fputcsv($fp, $item);
         }
+
         // Read what we have written.
         rewind($fp);
         $csv_string = stream_get_contents($fp);
+
         fclose($fp);
         return $csv_string;
     }
@@ -1470,14 +1278,14 @@ class Utility
         $last = strtolower($val[strlen($val)-1]);
 
         switch($last) {
-        case 'g':
-            return $val * 1024 * 1024 * 1024;
-        case 'm':
-            return $val * 1024 * 1024;
-        case 'k':
-            return $val * 1024;
-        default:
-            return $val;
+            case 'g':
+                return $val * 1024 * 1024 * 1024;
+            case 'm':
+                return $val * 1024 * 1024;
+            case 'k':
+                return $val * 1024;
+            default:
+                return $val;
         }
     }
 }
