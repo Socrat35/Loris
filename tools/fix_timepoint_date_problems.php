@@ -123,8 +123,8 @@ if (!in_array($action, array('diagnose', 'fix_date', 'add_instrument'))) {
     return false;
 }
 // check $candID
-if (!preg_match("/^([0-9]{6})$/", $candID)) {
-    fwrite(STDERR, "Error: invalid 2st argument CandID ($candID).\n It has to be a 6-digit number\n");
+if (!preg_match("/^([0-9]{5,6})$/", $candID)) {
+    fwrite(STDERR, "Error: invalid 2st argument CandID ($candID).\n It has to be a 5-6 digit number\n");
     fwrite(STDERR, "For the script syntax type: fix_timepoint_date_problems.php help \n");
     return false;
 }
