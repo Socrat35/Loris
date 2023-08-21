@@ -73,7 +73,7 @@ class New_Profile extends \NDB_Form
                 $dob,
                 $edc,
                 $values['gender'],
-                $values['PSCID'] ?: null
+                $values['PSCID'] ?? null
             );
         } else {
             $centerIDs = $user->getData('CenterIDs');
@@ -83,7 +83,7 @@ class New_Profile extends \NDB_Form
                 $dob,
                 $edc,
                 $values['gender'],
-                $values['PSCID'] ?: null
+                $values['PSCID'] ?? null
             );
         }
 
@@ -127,8 +127,8 @@ class New_Profile extends \NDB_Form
                         'language'       => 'en',
                         'format'         => $dobFormat,
                         'addEmptyOption' => true,
-                        'minYear'        => $startYear - $ageMax - 20,
-                        'maxYear'        => $endYear - $ageMin + 40,
+                        'minYear'        => $startYear - $ageMax,
+                        'maxYear'        => $endYear - $ageMin,
                        );
 
         $dateAttributes = ['class' => 'form-control input-sm input-date'];
