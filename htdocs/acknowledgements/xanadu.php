@@ -712,7 +712,11 @@ function recursivePathParser(array &$output, array $levels){
         }
     // The value exists so we must go down one level
     }else {
-        recursivePathParser($output[$levels[0]], array_slice($levels, 1));
+        if (!empty(array_slice($levels, 1))){
+            recursivePathParser(
+                $output[$levels[0]],
+                array_slice($levels, 1));
+        }
     }
 }
 
