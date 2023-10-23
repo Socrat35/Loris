@@ -182,3 +182,12 @@ input[type="file"] {
   padding: 10px;
   text-align: center;
 }
+
+#embargo_container {
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+#embargo_label{
+  text-align: right;
+}

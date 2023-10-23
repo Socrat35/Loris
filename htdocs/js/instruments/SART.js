@@ -140,21 +140,24 @@ function addResetButtonEventHandler() {
   // the inputs
   $('#reset_button').on('click', function(e) {
     e.preventDefault();
-    $('#good_number_not_pressed').val('');
-    $('#good_number_pressed').val('');
-    $('#good_numbers').val('');
-    $('#bad_number_pressed').val('');
-    $('#bad_number_not_pressed').val('');
-    $('#bad_numbers').val('');
-    $('#valid_press_mean_RT').val('');
-    $('#valid_press_RT_SD').val('');
-    $('#pre_invalid_press_mean_consecutive_valid_press_RT').val('');
-    $('#pre_invalid_press_consecutive_valid_press_RT_SD').val('');
-    $('#pre_invalid_press_consecutive_valid_presses').val('');
-    $('#post_invalid_press_mean_consecutive_valid_press_RT').val('');
-    $('#post_invalid_press_consecutive_valid_press_RT_SD').val('');
-    $('#post_invalid_press_consecutive_valid_presses').val('');
+    if ($('#administration').val() !== 'None') {
+      $('#good_number_not_pressed').val('');
+      $('#good_number_pressed').val('');
+      $('#good_numbers').val('');
+      $('#bad_number_pressed').val('');
+      $('#bad_number_not_pressed').val('');
+      $('#bad_numbers').val('');
+      $('#valid_press_mean_RT').val('');
+      $('#valid_press_RT_SD').val('');
+      $('#pre_invalid_press_mean_consecutive_valid_press_RT').val('');
+      $('#pre_invalid_press_consecutive_valid_press_RT_SD').val('');
+      $('#pre_invalid_press_consecutive_valid_presses').val('');
+      $('#post_invalid_press_mean_consecutive_valid_press_RT').val('');
+      $('#post_invalid_press_consecutive_valid_press_RT_SD').val('');
+      $('#post_invalid_press_consecutive_valid_presses').val('');
+    }
     $('#comments').val('');
+    $('#embargo').val('Restricted');
   });
 }
 /**
@@ -370,6 +373,12 @@ function fancyErrorPrompt(title, message) {
  * Function which defines and add the tooltips for all elements on the page.
  */
 function addTooltips() {
+  //
+  // Adding the tooltips for the embargo select
+  //
+  addBootstrapTooltip(
+    'embargo_label',
+    '<p><span class="bold">Restricted:</span> For exclusive use of the original laboratory.</p><p><span class="bold">Internal:</span> Can be shared within the research group.</p><p><span class="bold">Open:</span> Can be shared outside the research group.</p>');
   //
   // Adding the tooltips for the first table
   //
