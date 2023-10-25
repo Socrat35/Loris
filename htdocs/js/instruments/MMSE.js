@@ -105,7 +105,7 @@ function instrumentSettingsEventHandler() {
     e.preventDefault();
     // Parse the candID, sessionID and commentID from the address produced
     // by the .htaccess rewrite rules of the site
-    let locationParameters = $(location).attr('href').match(/^https:\/\/.+\/([0-9]+)\/([0-9]+).+commentID=([0-9A-Za-z]+)$/);
+    let locationParameters = $(location).attr('href').match(/^https:\/\/.+\/([0-9]+)\/([0-9]+).+commentID=([0-9A-Za-z_]+)$/);
     // Assign the values to separate variables
     let candID = locationParameters[1];
     let sessionID = locationParameters[2];
