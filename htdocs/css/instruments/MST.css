@@ -1,0 +1,202 @@
+#form-table > thead > tr > th {
+  text-align: center;
+  vertical-align: middle;
+}
+
+#form-table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+#form-table > tbody > tr > td > p {
+  margin-bottom: 0;
+  text-align: center;
+}
+
+span.bold {
+  font-weight: bolder;
+}
+
+span.emphasis {
+  font-style: italic;
+}
+
+optgroup {
+  text-align: center;
+}
+
+optgroup[label="Internal Users"] > option {
+}
+
+optgroup[label="External Users"] > option {
+  color: lightgray;
+  font-style: italic;
+}
+
+option {
+  text-align: center;
+  font-size: smaller;
+}
+
+h2 {
+  font-weight: bold;
+  text-align: center;
+}
+
+h2.Restricted {
+  color: red;
+}
+
+h2.Internal {
+  color: goldenrod;
+}
+
+h2.Open {
+  color: green;
+}
+
+h3 {
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.font-smaller{
+  font-size: smaller;
+}
+
+#result-table > tbody > tr {
+  height: 100px;
+}
+
+#result-table > thead > tr > th {
+  text-align: center;
+  vertical-align: middle;
+  font-size: larger;
+}
+
+#result-table > tbody > tr > td{
+  text-align: center;
+  vertical-align: middle;
+}
+
+#result-table > tbody > tr > td{
+  text-align: center;
+  vertical-align: middle;
+}
+
+#result-table > tbody > tr > td > p{
+  margin-bottom: 0px;
+}
+
+span.good-value {
+  color: green;
+}
+
+span.bad-value {
+  color: red;
+}
+
+.no-top-border{
+  border-top-style: hidden !important;
+}
+
+.no-left-border{
+  border-left-style: hidden !important;
+}
+.no-right-border{
+  border-right-style: hidden !important;
+}
+.no-bottom-border{
+  border-bottom-style: hidden !important;
+}
+
+.data-entry-table > tbody > tr > th {
+  text-align: center;
+  vertical-align: middle;
+  font-size: larger;
+}
+
+.data-entry-table > tbody > tr > td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.file-upload-table > thead > tr > th {
+  text-align: center;
+  vertical-align: middle;
+  font-size: larger;
+}
+
+.file-upload-table > tbody > tr > td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.extracted-data-table > thead > tr > th {
+  text-align: center;
+  vertical-align: middle;
+  font-size: small;
+}
+
+.extracted-data-table > tbody > tr > th, td {
+  text-align: center;
+  vertical-align: middle;
+  font-size: smaller;
+}
+
+input[type="text"] {
+  text-align: center;
+}
+
+input[type="file"] {
+  margin: auto;
+}
+
+.invalidFiles {
+  color: red !important;
+}
+
+.invalidFiles > a {
+  color: red !important;
+}
+
+.validFiles {
+  color: green !important;
+}
+
+.incompleteFiles {
+  color: goldenrod !important;
+}
+
+.file-error-comment {
+  font-weight: bold;
+  font-family: Verdana, Sans-Serif;
+}
+
+.text-files {
+  font-size: medium;
+  font-weight: bold;
+}
+
+#comments {
+  padding: 10px;
+  text-align: center;
+}
+
+.settings_container {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  vertical-align: middle;
+}
+
+.settings_container > label {
+  text-align: right;
+}
+
+#embargo_label{
+  text-align: right;
+}
+
+input[type="text"][tabindex="-1"] {
+  background-color: lightgray;
+}
