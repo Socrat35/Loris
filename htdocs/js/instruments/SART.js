@@ -186,14 +186,23 @@ function addExtractionButtonEventHandler() {
         complete: function(results, file) {
           // Strip the address from the URI to get the filename of the file
           let filename = file.match(/.+File=(.+)$/)[1];
+          // Get handle on the headers values from the TSV file
+          let headers = results.data[0];
           //
           // The SART experiment is static for both the number of columns
           // and the length of the file if the full experiment was completed
-          // The magic numbers 237 and 44 match those constants for a full
-          // experiment
+          // The magic numbers 237 is the static number of lines and the
+          // columns from the header line are the calculated values at the end
+          // of the experiment
           //
           // If the experiment was incomplete
-          if (results.data.length !== 237 || results.data[0].length !== 44) {
+          if (results.data.length !== 237 ||
+            headers.indexOf('strTrue') === -1 ||
+            headers.indexOf('strFalse') === -1 ||
+            headers.indexOf('strTrueRT') === -1 ||
+            headers.indexOf('strPre') === -1 ||
+            headers.indexOf('strPost') === -1
+          ) {
             fancyErrorPrompt('Incomplete or Reconstructed File',
               'The file ' + filename + ' is a partial or reconstructed ' +
               'file. It doesn\'t include the descriptive statistics wanted by ' +
@@ -201,21 +210,16 @@ function addExtractionButtonEventHandler() {
               'statistics or use the values noted on the paper copy of the ' +
               'test.');
           } else {
-            // Get handle on the headers values from the TSV file
-            let headers = results.data[0];
             // Get handle on the first row of experimental data after the trial
             // runs
             let dataRow = 11;
             // Parse the descriptive statistics calculated at the end of the
             // experiment and added to the EDAT file as global variables
-            // Here the magic numbers are from the default configuration of
-            // the order of those parameters with a backup matching based
-            // on the headers if someone changes the order in the TSV file
-            let strTrue = headers.indexOf('strTrue') === -1 ? 25 : headers.indexOf('strTrue');
-            let strFalse = headers.indexOf('strFalse') === -1 ? 22 : headers.indexOf('strFalse');
-            let strTrueRT = headers.indexOf('strTrueRT') === -1 ? 26 : headers.indexOf('strTrueRT');
-            let strPre = headers.indexOf('strPre') === -1 ? 24 : headers.indexOf('strPre');
-            let strPost = headers.indexOf('strPost') === -1 ? 23 : headers.indexOf('strPost');
+            let strTrue = headers.indexOf('strTrue');
+            let strFalse = headers.indexOf('strFalse');
+            let strTrueRT = headers.indexOf('strTrueRT');
+            let strPre = headers.indexOf('strPre');
+            let strPost = headers.indexOf('strPost');
 
             // Split the good and bad numbers statistics on slashes and unpack
             // into matching variables
