@@ -263,9 +263,7 @@ $(document).ready(function() {
       }
       let answer14 = window.prompt('14) Description of physical activity (type and hours per week)');
       let answer14Status = answer14 === '' ?
-        validatePrompt(
-        'Availability of the description of physical activity\n\n\tN => Not Answered\n\tblank => blank',
-        nullNA) :
+        'not_answered' :
         '';
       let answer14Level = validatePrompt(
         '14) Physical activity level\n\n\tL => Light Intensity\n\tRL => Regular Light Intensity\n\tRM => Regular Moderate Intensity\n\tRH => Regular Heavy Intensity\n\tblank => Not Answered',
@@ -285,9 +283,7 @@ $(document).ready(function() {
           '';
       let answer6primeAJustificationStatus =
         answer6primeA === 'no' && answer6primeAJustification === '' ?
-          validatePrompt(
-            'Availability of the justification for the absence of blood collection for labs\n\n\tblank => blank\n\tN => Not Answered',
-            nullNA) :
+          'not_answered' :
           '';
       let answer6primeB = validatePrompt(
         '6\'B) Was blood collected for biosamples at this visit?\n\n\tY => Yes\n\tN => No\n\tblank => Not Answered',
@@ -298,9 +294,7 @@ $(document).ready(function() {
           '';
       let answer6primeBJustificationStatus =
         answer6primeB === 'no' && answer6primeBJustification === '' ?
-          validatePrompt(
-            'Availability of the justification for the absence of blood collection for biosamples\n\n\tblank => blank\n\tN => Not Answered',
-            nullNA) :
+          'not_answered' :
           '';
       let answer9primeA = window.prompt('Systolic pressure');
       answer9primeA =
@@ -309,9 +303,7 @@ $(document).ready(function() {
           answer9primeA;
       let answer9primeAJustification =
         answer9primeA === '' ?
-          validatePrompt(
-            'Availability of the value for systolic pressure\n\n\tblank => blank\n\tN => Not Answered',
-            nullNA) :
+          'not_answered' :
           '';
       let answer9primeB = window.prompt('Diastolic pressure');
       answer9primeB =
@@ -320,11 +312,11 @@ $(document).ready(function() {
           answer9primeB;
       let answer9primeBJustification =
         answer9primeB === '' ?
-          validatePrompt(
-            'Availability of the value for diastolic pressure\n\n\tblank => blank\n\tN => Not Answered',
-            nullNA) :
+          'not_answered' :
           '';
-      let answer10prime = validatePrompt(
+      let answer10prime = answer9primeAJustification === 'not_answered' && answer9primeBJustification === 'not_answered' ?
+        'not_answered' :
+        validatePrompt(
         '10\') Are the blood pressure values recorded considered to be in the normal range?\n\n\tY => Yes\n\tN => No\n\tblank => Not Answered',
         yesNoNA);
       let answer11primeA = window.prompt('11\') Pulse (/min)');
@@ -334,17 +326,17 @@ $(document).ready(function() {
           answer11primeA;
       let answer11primeAJustification =
         answer11primeA === '' ?
-          validatePrompt(
-            'Availability of the value for pulse\n\n\tblank => blank\n\tN => Not Answered',
-            nullNA) :
+          'not_answered' :
           '';
-      let answer11primeB = validatePrompt(
+      let answer11primeB = answer11primeAJustification === 'not_answered' ?
+        'not_answered' :
+        validatePrompt(
         '11\'B) Is the pulse regular or irregular?\n\n\tR => Regular\n\tI => Irregular\n\tblank => Not Answered',
-        {
-          'R': 'regular',
-          'I': 'irregular',
-          '': 'not_answered'
-        }
+          {
+            'R': 'regular',
+            'I': 'irregular',
+            '': 'not_answered'
+          }
       );
       let answer12primeA = window.prompt('12\'A) Weight');
       answer12primeA =
@@ -353,218 +345,193 @@ $(document).ready(function() {
           answer12primeA;
       let answer12primeAJustification =
         answer12primeA === '' ?
-          validatePrompt(
-        'Availability of the value for weight\n\n\tblank => blank\n\tN => Not Answered',
-        nullNA) :
-      '';
-      // Use the SweetAlert equivalent of the 'confirm' prompt to display
-      // the extracted values as a table matching the visual aspect of
-      // the form
-      // Note1: the way to call such a function as changed in later
-      // versions of SweetAlert
-      // Note2: the {$varname} syntax might look like smarty but is,
-      // in this case, due to variable substitution on a multi-line
-      // string
-      swal({
-        title: 'AutoFill Values',
-        type: 'info',
-        showConfirmButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'Set Values',
-        cancelButtonText: 'Cancel',
-        closeOnClickOutside: false,
-        closeOnEscape: false,
-        html: true,
-        text: `
-                      <p>The values you've provided and the static values have been tabulated.</p>
-                      <p>Confirm to transcribe.</p>
-`
-      }, function() {
-        // If the user confirmed the prompt, set the values extracted
-        // to matching the matching inputs
-        //
-        // Static Inputs
-        //
-        // Question 3) Medical Questionnaire
-        $('select[name="3_medical_questionnaire_a"]').val('not_answered');
-        $('select[name="3_medical_questionnaire_b"]').val('not_answered');
-        $('select[name="3_medical_questionnaire_c"]').val('not_answered');
-        // Question 3) Symptoms
-        $('select[name="drug_allergy"]').val('not_answered');
-        $('select[name="sinusitis"]').val('not_answered');
-        $('select[name="smell_loss"]').val('not_answered');
-        $('select[name="pruritis"]').val('not_answered');
-        $('select[name="urticaria"]').val('not_answered');
-        $('select[name="pigmentation_changes"]').val('not_answered');
-        $('select[name="erythema_rash"]').val('not_answered');
-        $('select[name="bruising"]').val('not_answered');
-        $('select[name="petechiae_purpura"]').val('not_answered');
-        $('select[name="epistaxis"]').val('not_answered');
-        $('select[name="hemoptysis"]').val('not_answered');
-        $('select[name="hematemesis"]').val('not_answered');
-        $('select[name="melena"]').val('not_answered');
-        $('select[name="rectal_bleeding"]').val('not_answered');
-        $('select[name="hematochezia"]').val('not_answered');
-        $('select[name="vaginal_bleeding"]').val('not_answered');
-        $('select[name="hematuria"]').val('not_answered');
-        $('select[name="anemia"]').val('not_answered');
-        $('select[name="hemorrhage"]').val('not_answered');
-        $('select[name="hemorrhage_specify_status"]').val('not_answered');
-        $('select[name="urinary_reduction"]').val('not_answered');
-        $('select[name="incontinence"]').val('not_answered');
-        $('select[name="shortness_of_breath"]').val('not_answered');
-        $('select[name="peripheral_oedema"]').val('not_answered');
-        $('select[name="unexplained_weight_gain"]').val('not_answered');
-        $('select[name="unexplained_weight_loss"]').val('not_answered');
-        $('select[name="dysphagia"]').val('not_answered');
-        $('select[name="dyspepsia"]').val('not_answered');
-        $('select[name="nausea"]').val('not_answered');
-        $('select[name="acid_reflux"]').val('not_answered');
-        $('select[name="other_abdominal_pain"]').val('not_answered');
-        $('select[name="stomatitis_pharyngitis"]').val('not_answered');
-        $('select[name="vomiting"]').val('not_answered');
-        $('select[name="diarrhea"]').val('not_answered');
-        $('select[name="costovertebral_tenderness_back"]').val('not_answered');
-        $('select[name="lower_back_pain"]').val('not_answered');
-        $('select[name="tinnitus"]').val('not_answered');
-        $('select[name="dizziness_vertigo"]').val('not_answered');
-        $('select[name="insomnia"]').val('not_answered');
-        $('select[name="headache"]').val('not_answered');
-        $('select[name="numbness_tingling"]').val('not_answered');
-        $('select[name="tremor_shakiness"]').val('not_answered');
-        $('select[name="falls"]').val('not_answered');
-        $('select[name="fainting_syncopy"]').val('not_answered');
-        $('select[name="uncontrolled_high_blood_pressure"]').val('not_answered');
-        $('select[name="uncontrolled_hyperglycemia"]').val('not_answered');
-        $('select[name="other_symptom1"]').val('not_answered');
-        $('select[name="other_symptom1_specify_status"]').val('not_answered');
-        $('select[name="other_symptom2"]').val('not_answered');
-        $('select[name="other_symptom2_specify_status"]').val('not_answered');
-        $('select[name="other_symptom3"]').val('not_answered');
-        $('select[name="other_symptom3_specify_status"]').val('not_answered');
-        $('select[name="other_symptom4"]').val('not_answered');
-        $('select[name="other_symptom4_specify_status"]').val('not_answered');
-        $('select[name="other_symptom5"]').val('not_answered');
-        $('select[name="other_symptom5_specify_status"]').val('not_answered');
-        // Question 4) Since the last visit
-        $('select[name="4_new_symptoms"]').val('not_answered');
-        // Question 5) Updates on family history
-        $('select[name="family_memory"]').val('not_answered');
-        // Question 15) Was a physical done at the visit
-        $('select[name="physical"]').val('no');
-        // Question 16) Rectal examination
-        $('select[name="rectal_exam"]').val('no');
-        // Question 17) Genital examination
-        $('select[name="genital_exam"]').val('no');
-        // Question 18) Neurological examination
-        $('select[name="neurological_exam"]').val('no');
-        // Question 7'A) Urine collection labs
-        $('select[name="7_urinalysis_chemstrip"]').val('no');
-        $('textarea[name="7_urinalysis_chemstrip_reason"]').val('');
-        $('select[name="7_urinalysis_chemstrip_reason_status"]').val('not_answered');
-        // Question 7'B) Urine collection biosamples
-        $('select[name="7_urine_biosamples"]').val('no');
-        $('textarea[name="7_urine_biosamples_reason"]').val('');
-        $('select[name="7_urine_biosamples_reason_status"]').val('not_answered');
-        // Question 7'C) Glucose
-        $('select[name="7_glucose"]').val('not_answered');
-        // Question 7'D) Protein
-        $('select[name="7_protein"]').val('not_answered');
-        // Question 8') EKG
-        $('select[name="8_EKG"]').val('no');
-        $('textarea[name="8_EKG_no_reason"]').val('');
-        $('select[name="8_EKG_no_reason_status"]').val('not_answered');
-        // Question 12'A) Weight
-        $('select[name="12_weight_units"]').val('kg');
-        // Question 12'B)
-        $('select[name="5_continue_cohort"]').val('not_answered');
-        // Question 12'C)
-        $('select[name="5_continue_trial"]').val('not_answered');
-        //
-        // Prompted values inputs
-        //
-        // Question 4B) Been diagnosed with new problem
-
-        $('select[name="4_new_conditions"]').val(answer4A);
-        // Question 4C) Pre-existing condition worsen
-        $('select[name="4_worsened_conditions"]').val(answer4B);
-        // Question 5A) Update on family history
-        $('select[name="family_update"]').val(answer5A);
-        // Question 5C) Family member enrolled since Eligibility
-        $('select[name="family_enrollment"]').val(answer5C);
-        // Question 5D) Lifestyle updates
-        $('select[name="habits_update"]').val(answer5D);
-        // Lifestyle habits
-        // Appetite
-        $('select[name="appetite_habits_update"]').val(answer6);
-        $('textarea[name="abnormal_appetite_update"]').val(answer6Explanation);
-        $('select[name="abnormal_appetite_update_status"]').val(answer6ExplanationStatus);
-        // Sleeping
-        $('select[name="sleeping_habits_update"]').val(answer7);
-        $('textarea[name="abnormal_sleeping_update"]').val(answer7Explanation);
-        $('select[name="abnormal_sleeping_update_status"]').val(answer7ExplanationStatus);
-        // Cigarette
-        $('select[name="cigarette_smoking_update"]').val(answer8);
-        $('textarea[name="cigarette_stopped_update"]').val(answer8Explanation1);
-        $('select[name="cigarette_stopped_update_status"]').val(answer8Explanation1Status);
-        $('textarea[name="cigarette_yes_update"]').val(answer8Explanation2);
-        $('select[name="cigarette_yes_update_status"]').val(answer8Explanation2Status);
-        // Cigar
-        $('select[name="cigar_smoking_update"]').val(answer9);
-        $('textarea[name="cigar_stopped_update"]').val(answer9Explanation1);
-        $('select[name="cigar_stopped_update_status"]').val(answer9Explanation1Status);
-        $('textarea[name="cigar_yes_update"]').val(answer9Explanation2);
-        $('select[name="cigar_yes_update_status"]').val(answer9Explanation2Status);
-        // Pipe
-        $('select[name="pipe_smoking_update"]').val(answer10);
-        $('textarea[name="pipe_stopped_update"]').val(answer10Explanation1);
-        $('select[name="pipe_stopped_update_status"]').val(answer10Explanation1Status);
-        $('textarea[name="pipe_yes_update"]').val(answer10Explanation2);
-        $('select[name="pipe_yes_update_status"]').val(answer10Explanation2Status);
-        // Drugs
-        $('select[name="drug_consumption_update"]').val(answer11);
-        $('textarea[name="drug_stopped_update"]').val(answer11Explanation1);
-        $('select[name="drug_stopped_update_status"]').val(answer11Explanation1Status);
-        $('textarea[name="drug_yes_update"]').val(answer11Explanation2);
-        $('select[name="drug_yes_update_status"]').val(answer11Explanation2Status);
-        // Alcohol
-        $('select[name="alcohol_consumption_update"]').val(answer12);
-        $('textarea[name="alcohol_stopped_update"]').val(answer12Explanation1);
-        $('select[name="alcohol_stopped_update_status"]').val(answer12Explanation1Status);
-        $('textarea[name="alcohol_yes_update"]').val(answer12Explanation2);
-        $('select[name="alcohol_yes_update_status"]').val(answer12Explanation2Status);
-        // Dependence
-        $('select[name="dependency_update"]').val(answer13);
-        // Question 14A) Physical activity description
-        $('textarea[name="physical_activity_description_update"]').val(answer14);
-        $('select[name="physical_activity_description_update_status"]').val(answer14Status);
-        // Question 14B) Physical activity level
-        $('select[name="activity_level_update"]').val(answer14Level);
-        // Question 6'A) Blood collection for labs
-        $('select[name="6_blood_labs"]').val(answer6primeA);
-        $('textarea[name="6_blood_labs_reason"]').val(answer6primeAJustification);
-        $('select[name="6_blood_labs_reason_status"]').val(answer6primeAJustificationStatus);
-        // Question 6'B) Blood collection for biosamples
-        $('select[name="6_blood_biosamples"]').val(answer6primeB);
-        $('textarea[name="6_blood_biosamples_reason"]').val(answer6primeBJustification);
-        $('select[name="6_blood_biosamples_reason_status"]').val(answer6primeBJustificationStatus);
-        // Question 9') Blood pressure
-        $('input[name="9_systolic_bp"]').val(answer9primeA);
-        $('select[name="9_systolic_bp_status"]').val(answer9primeAJustification);
-        $('input[name="9_diastolic_bp"]').val(answer9primeB);
-        $('select[name="9_diastolic_bp_status"]').val(answer9primeBJustification);
-        // Question 10') BP range
-        $('select[name="10_bp_range"]').val(answer10prime);
-        // Question 11') Pulse
-        $('input[name="11_pulse"]').val(answer11primeA);
-        $('select[name="11_pulse_status"]').val(answer11primeAJustification);
-        $('select[name="11_pulse_regularity"]').val(answer11primeB);
-        // Question 12') Weight
-        $('input[name="12_weight"]').val(answer12primeA);
-        $('select[name="12_weight_status"]').val(answer12primeAJustification);
-        // Sending form
-        $('input[name="fire_away"]').trigger('click');
-      });
+          'not_answered' :
+        '';
+      //
+      //              Updating inputs
+      //
+      // Static Inputs
+      //
+      // Question 3) Medical Questionnaire
+      assignValue('select[name="3_medical_questionnaire_a"]');
+      assignValue('select[name="3_medical_questionnaire_b"]');
+      assignValue('select[name="3_medical_questionnaire_c"]');
+      // Question 3) Symptoms
+      assignValue('select[name="drug_allergy"]');
+      assignValue('select[name="sinusitis"]');
+      assignValue('select[name="smell_loss"]');
+      assignValue('select[name="pruritis"]');
+      assignValue('select[name="urticaria"]');
+      assignValue('select[name="pigmentation_changes"]');
+      assignValue('select[name="erythema_rash"]');
+      assignValue('select[name="bruising"]');
+      assignValue('select[name="petechiae_purpura"]');
+      assignValue('select[name="epistaxis"]');
+      assignValue('select[name="hemoptysis"]');
+      assignValue('select[name="hematemesis"]');
+      assignValue('select[name="melena"]');
+      assignValue('select[name="rectal_bleeding"]');
+      assignValue('select[name="hematochezia"]');
+      assignValue('select[name="vaginal_bleeding"]');
+      assignValue('select[name="hematuria"]');
+      assignValue('select[name="anemia"]');
+      assignValue('select[name="hemorrhage"]');
+      assignValue('select[name="hemorrhage_specify_status"]');
+      assignValue('select[name="urinary_reduction"]');
+      assignValue('select[name="incontinence"]');
+      assignValue('select[name="shortness_of_breath"]');
+      assignValue('select[name="peripheral_oedema"]');
+      assignValue('select[name="unexplained_weight_gain"]');
+      assignValue('select[name="unexplained_weight_loss"]');
+      assignValue('select[name="dysphagia"]');
+      assignValue('select[name="dyspepsia"]');
+      assignValue('select[name="nausea"]');
+      assignValue('select[name="acid_reflux"]');
+      assignValue('select[name="other_abdominal_pain"]');
+      assignValue('select[name="stomatitis_pharyngitis"]');
+      assignValue('select[name="vomiting"]');
+      assignValue('select[name="diarrhea"]');
+      assignValue('select[name="costovertebral_tenderness_back"]');
+      assignValue('select[name="lower_back_pain"]');
+      assignValue('select[name="tinnitus"]');
+      assignValue('select[name="dizziness_vertigo"]');
+      assignValue('select[name="insomnia"]');
+      assignValue('select[name="headache"]');
+      assignValue('select[name="numbness_tingling"]');
+      assignValue('select[name="tremor_shakiness"]');
+      assignValue('select[name="falls"]');
+      assignValue('select[name="fainting_syncopy"]');
+      assignValue('select[name="uncontrolled_high_blood_pressure"]');
+      assignValue('select[name="uncontrolled_hyperglycemia"]');
+      assignValue('select[name="other_symptom1"]');
+      assignValue('select[name="other_symptom1_specify_status"]');
+      assignValue('select[name="other_symptom2"]');
+      assignValue('select[name="other_symptom2_specify_status"]');
+      assignValue('select[name="other_symptom3"]');
+      assignValue('select[name="other_symptom3_specify_status"]');
+      assignValue('select[name="other_symptom4"]');
+      assignValue('select[name="other_symptom4_specify_status"]');
+      assignValue('select[name="other_symptom5"]');
+      assignValue('select[name="other_symptom5_specify_status"]');
+      // Question 4) Since the last visit
+      assignValue('select[name="4_new_symptoms"]');
+      // Question 5) Updates on family history
+      assignValue('select[name="family_memory"]');
+      // Question 15) Was a physical done at the visit
+      assignValue('select[name="physical"]', 'no');
+      // Question 16) Rectal examination
+      assignValue('select[name="rectal_exam"]', 'no');
+      // Question 17) Genital examination
+      assignValue('select[name="genital_exam"]', 'no');
+      // Question 18) Neurological examination
+      assignValue('select[name="neurological_exam"]', 'no');
+      // Question 7'A) Urine collection labs
+      assignValue('select[name="7_urinalysis_chemstrip"]', 'no');
+      assignValue('textarea[name="7_urinalysis_chemstrip_reason"]', '');
+      assignValue('select[name="7_urinalysis_chemstrip_reason_status"]');
+      // Question 7'B) Urine collection biosamples
+      assignValue('select[name="7_urine_biosamples"]', 'no');
+      assignValue('textarea[name="7_urine_biosamples_reason"]', '');
+      assignValue('select[name="7_urine_biosamples_reason_status"]');
+      // Question 7'C) Glucose
+      assignValue('select[name="7_glucose"]');
+      // Question 7'D) Protein
+      assignValue('select[name="7_protein"]');
+      // Question 8') EKG
+      assignValue('select[name="8_EKG"]', 'no');
+      assignValue('textarea[name="8_EKG_no_reason"]', '');
+      assignValue('select[name="8_EKG_no_reason_status"]');
+      // Question 12'A) Weight
+      assignValue('select[name="12_weight_units"]', 'kg');
+      // Question 12'B)
+      assignValue('select[name="5_continue_cohort"]');
+      // Question 12'C)
+      assignValue('select[name="5_continue_trial"]');
+      //
+      // Prompted values inputs
+      //
+      // Question 4B) Been diagnosed with new problem
+      assignValue('select[name="4_new_conditions"]', answer4A);
+      // Question 4C) Pre-existing condition worsen
+      assignValue('select[name="4_worsened_conditions"]', answer4B);
+      // Question 5A) Update on family history
+      assignValue('select[name="family_update"]', answer5A);
+      // Question 5C) Family member enrolled since Eligibility
+      assignValue('select[name="family_enrollment"]', answer5C);
+      // Question 5D) Lifestyle updates
+      assignValue('select[name="habits_update"]', answer5D);
+      //
+      // Lifestyle habits
+      //
+      // Appetite
+      assignValue('select[name="appetite_habits_update"]', answer6);
+      assignValue('textarea[name="abnormal_appetite_update"]', answer6Explanation);
+      assignValue('select[name="abnormal_appetite_update_status"]', answer6ExplanationStatus);
+      // Sleeping
+      assignValue('select[name="sleeping_habits_update"]', answer7);
+      assignValue('textarea[name="abnormal_sleeping_update"]', answer7Explanation);
+      assignValue('select[name="abnormal_sleeping_update_status"]', answer7ExplanationStatus);
+      // Cigarette
+      assignValue('select[name="cigarette_smoking_update"]', answer8);
+      assignValue('textarea[name="cigarette_stopped_update"]', answer8Explanation1);
+      assignValue('select[name="cigarette_stopped_update_status"]', answer8Explanation1Status);
+      assignValue('textarea[name="cigarette_yes_update"]', answer8Explanation2);
+      assignValue('select[name="cigarette_yes_update_status"]', answer8Explanation2Status);
+      // Cigar
+      assignValue('select[name="cigar_smoking_update"]', answer9);
+      assignValue('textarea[name="cigar_stopped_update"]', answer9Explanation1);
+      assignValue('select[name="cigar_stopped_update_status"]', answer9Explanation1Status);
+      assignValue('textarea[name="cigar_yes_update"]', answer9Explanation2);
+      assignValue('select[name="cigar_yes_update_status"]', answer9Explanation2Status);
+      // Pipe
+      assignValue('select[name="pipe_smoking_update"]', answer10);
+      assignValue('textarea[name="pipe_stopped_update"]', answer10Explanation1);
+      assignValue('select[name="pipe_stopped_update_status"]', answer10Explanation1Status);
+      assignValue('textarea[name="pipe_yes_update"]', answer10Explanation2);
+      assignValue('select[name="pipe_yes_update_status"]', answer10Explanation2Status);
+      // Drugs
+      assignValue('select[name="drug_consumption_update"]', answer11);
+      assignValue('textarea[name="drug_stopped_update"]', answer11Explanation1);
+      assignValue('select[name="drug_stopped_update_status"]', answer11Explanation1Status);
+      assignValue('textarea[name="drug_yes_update"]', answer11Explanation2);
+      assignValue('select[name="drug_yes_update_status"]', answer11Explanation2Status);
+      // Alcohol
+      assignValue('select[name="alcohol_consumption_update"]', answer12);
+      assignValue('textarea[name="alcohol_stopped_update"]', answer12Explanation1);
+      assignValue('select[name="alcohol_stopped_update_status"]', answer12Explanation1Status);
+      assignValue('textarea[name="alcohol_yes_update"]', answer12Explanation2);
+      assignValue('select[name="alcohol_yes_update_status"]', answer12Explanation2Status);
+      // Dependence
+      assignValue('select[name="dependency_update"]', answer13);
+      // Question 14A) Physical activity description
+      assignValue('textarea[name="physical_activity_description_update"]', answer14);
+      assignValue('select[name="physical_activity_description_update_status"]', answer14Status);
+      // Question 14B) Physical activity level
+      assignValue('select[name="activity_level_update"]', answer14Level);
+      // Question 6'A) Blood collection for labs
+      assignValue('select[name="6_blood_labs"]', answer6primeA);
+      assignValue('textarea[name="6_blood_labs_reason"]', answer6primeAJustification);
+      assignValue('select[name="6_blood_labs_reason_status"]', answer6primeAJustificationStatus);
+      // Question 6'B) Blood collection for biosamples
+      assignValue('select[name="6_blood_biosamples"]', answer6primeB);
+      assignValue('textarea[name="6_blood_biosamples_reason"]', answer6primeBJustification);
+      assignValue('select[name="6_blood_biosamples_reason_status"]', answer6primeBJustificationStatus);
+      // Question 9') Blood pressure
+      assignValue('input[name="9_systolic_bp"]', answer9primeA);
+      assignValue('select[name="9_systolic_bp_status"]', answer9primeAJustification);
+      assignValue('input[name="9_diastolic_bp"]', answer9primeB);
+      assignValue('select[name="9_diastolic_bp_status"]', answer9primeBJustification);
+      // Question 10') BP range
+      assignValue('select[name="10_bp_range"]', answer10prime);
+      // Question 11') Pulse
+      assignValue('input[name="11_pulse"]', answer11primeA);
+      assignValue('select[name="11_pulse_status"]', answer11primeAJustification);
+      assignValue('select[name="11_pulse_regularity"]', answer11primeB);
+      // Question 12') Weight
+      assignValue('input[name="12_weight"]', answer12primeA);
+      assignValue('select[name="12_weight_status"]', answer12primeAJustification);
+      // Triggering the submitting of the form
+      $('input[name="fire_away"]').trigger('click');
     });
   }
 });
@@ -601,4 +568,20 @@ function validatePrompt(text, answers) {
   } while (!Object.keys(answers).includes(answer));
   // return the value associated with input given from the answers' object
   return answers[answer];
+}
+/**
+ * Wrapper function for the assignment of a value to an element using jQuery.
+ * @param {string}  selector    CSS selector of the targeted element
+ * @param {string}  value       Text value to be given to the element
+ * @param {boolean} disabled    Enablement state of the element
+ */
+function assignValue(
+  selector,
+  value = 'not_answered',
+  disabled = false) {
+  // Adjusting the disabled property is necessary due to legacy
+  // issues with the validation which disables some fields which shouldn't
+  // be disabled while doing validation, thus causing issues with the POST
+  // Note: Shouldn't be necessary after proper refactoring
+  $(selector).val(value).prop('disabled', disabled);
 }
