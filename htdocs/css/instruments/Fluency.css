@@ -1,0 +1,291 @@
+label[for="languageID_select"] {
+  text-align: right;
+}
+
+label[for="limitationID_select"] {
+  text-align: right;
+}
+
+label[for="embargo"] {
+  text-align: right;
+}
+
+#form-table > thead > tr > th {
+  text-align: center;
+  vertical-align: middle;
+}
+
+#form-table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+#form-table > tbody > tr > td > p {
+  margin-bottom: 0;
+  text-align: center;
+}
+
+#result-table > thead > tr > th {
+  text-align: center;
+  vertical-align: middle;
+}
+
+#result-table > tbody > tr {
+  height: 150px;
+}
+
+#result-table > tbody > tr > th{
+  text-align: center;
+  vertical-align: middle;
+  font-size: larger;
+}
+
+#result-table > tbody > tr > td{
+  text-align: center;
+  vertical-align: middle;
+}
+
+#result-table > tbody > tr > td > p{
+  margin-bottom: 0px;
+}
+
+span.bold {
+  font-weight: bolder;
+}
+
+span.emphasis {
+  font-style: italic;
+}
+
+td.invalid{
+  background-color: mediumpurple;
+}
+
+td.pending{
+  background-color: lightgray;
+}
+
+td.normal-stage{
+  background-color: #57BB8A;
+}
+
+td.early-stage{
+  background-color: #B0BE6E;
+}
+
+td.middle-stage{
+  background-color: #E9B861;
+}
+
+td.late-stage{
+  background-color: #DD776E;
+}
+
+h2 {
+  font-weight: bold;
+  text-align: center;
+}
+
+h2.Restricted {
+  color: red;
+}
+
+h2.Internal {
+  color: goldenrod;
+}
+
+h2.Open {
+  color: green;
+}
+
+h3 {
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: bold;
+}
+
+td.description > ul {
+  text-align: left;
+  margin-bottom: 0px;
+}
+
+optgroup {
+  text-align: center;
+}
+
+optgroup[label="Internal Users"] > option {
+}
+
+optgroup[label="External Users"] > option {
+  color: lightgray;
+  font-style: italic;
+}
+
+#instrument-controls{
+  padding: 20px;
+}
+
+option {
+  text-align: center;
+  font-size: smaller;
+}
+
+label.bottom-input-text-label{
+  font-size: xx-small;
+  text-align: center;
+  margin-bottom: 0px;
+}
+
+label.left-label-select-input{
+  font-size: xx-small;
+}
+
+input[type=text]{
+  text-align: center;
+}
+
+.question-instruction{
+  text-align: center;
+  padding-bottom: 15px;
+
+}
+
+td.sub-score{
+  text-align: center;
+}
+
+th.info {
+  vertical-align: middle !important;
+}
+
+td.total-score{
+  text-align: center !important;
+  background-color: transparent !important;
+  font-weight: bold !important;
+  color: black;
+}
+
+tr.input-row > td > div {
+  vertical-align: middle;
+}
+
+tr.input-row > td {
+  height: 100px;
+  vertical-align: middle !important;
+}
+
+.row.equal {
+  vertical-align: middle;
+}
+
+.left-label-text-input {
+  font-weight: normal;
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+div.text-align-right{
+  text-align: right;
+}
+
+div.text-align-left{
+  text-align: left;
+}
+
+input[type=checkbox]{
+  width: auto;
+}
+
+.font-smaller{
+  font-size: smaller;
+}
+
+.cheat-button{
+  padding: 10px;
+}
+
+h2 {
+  font-weight: bold;
+  text-align: center;
+}
+
+h3{
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: bold;
+}
+
+div.cheat-button > button {
+  font-size: 100%;
+}
+
+span.bad-value {
+  color: red;
+}
+
+span.good-value {
+  color: green;
+}
+
+.no-top-border {
+  border-top-color: transparent !important;
+}
+
+.no-left-border {
+  border-left-color: transparent !important;
+}
+
+.no-right-border {
+  border-right-color: transparent !important;
+}
+
+.no-bottom-border {
+  border-bottom-color: transparent !important;
+}
+
+#data-entry-table1 > * > tr > td,th {
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+#data-entry-table1 > * > tr > th {
+  text-align: center;
+}
+
+#data-entry-table1 > tbody > tr > td {
+  align-items: center;
+}
+
+label.checkbox-label {
+  padding-left: 5px !important;
+}
+
+div.word-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+div.word-container > div.col > label.checkbox-label {
+  margin-bottom: 0px;
+}
+
+div.word-container > div.col-md-5 {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+button.remove_word_button {
+  margin-top: 0px;
+}
+
+button > span.glyphicon {
+  pointer-events: none;
+}
+
+#comments {
+  text-align: center;
+  margin-bottom: 10px;
+}
