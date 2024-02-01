@@ -347,6 +347,10 @@ $(document).ready(function() {
         answer12primeA === '' ?
           'not_answered' :
         '';
+      let answer12primeAUnit =
+        answer12primeA === '' ?
+          'not_answered' :
+          'kg';
       //
       //              Updating inputs
       //
@@ -441,8 +445,6 @@ $(document).ready(function() {
       assignValue('select[name="8_EKG"]', 'no');
       assignValue('textarea[name="8_EKG_no_reason"]', '');
       assignValue('select[name="8_EKG_no_reason_status"]');
-      // Question 12'A) Weight
-      assignValue('select[name="12_weight_units"]', 'kg');
       // Question 12'B)
       assignValue('select[name="5_continue_cohort"]');
       // Question 12'C)
@@ -530,6 +532,7 @@ $(document).ready(function() {
       // Question 12') Weight
       assignValue('input[name="12_weight"]', answer12primeA);
       assignValue('select[name="12_weight_status"]', answer12primeAJustification);
+      assignValue('select[name="12_weight_units"]', answer12primeAUnit);
       // Triggering the submitting of the form
       $('input[name="fire_away"]').trigger('click');
     });
