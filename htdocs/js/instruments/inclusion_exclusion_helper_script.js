@@ -136,12 +136,6 @@ $(document).ready(function() {
         'benzodiazepine use or dependence (in the opinion of the the study ' +
         'physician)?\n\n\tY => Yes\n\tN => No\n\t blank => Not Answered',
         yesNoNA);
-      let answer28 = validatePrompt(
-        '28) Are there any other conditions that, in the opinion of the ' +
-        'study physician, make it medically inappropriate for the ' +
-        'participant to enroll in the program?\n\n\t' +
-        'Y => Yes\n\tN => No\n\t blank => Not Answered',
-        yesNoNA);
       let answer29 = validatePrompt(
         '29) After revision of lab results, neuropsychological evaluation ' +
         'and physical examination, does the participant meet all eligibility ' +
@@ -215,7 +209,7 @@ $(document).ready(function() {
       // Question 25)
       assignValue('select[name="25_substance_dependence"]', answer25);
       // Question 28)
-      assignValue('select[name="28_other_condition"]', answer28);
+      assignValue('select[name="28_other_condition"]', answer17);
       // Question 29)
       assignValue('select[name="29_eligibility"]', answer29);
       // Question 29date)
