@@ -96,11 +96,6 @@ $(document).ready(function() {
         '14) Is the participant using vitamin E at a greater dosage than ' +
         '600 i.u. per day?\n\n\tY => Yes\n\tN => No\n\t blank => Not Answered',
         yesNoNA);
-      let answer17 = validatePrompt(
-        '17) Does the participant have a clinically significant ' +
-        'hypertension, anemia, liver disease or kidney disease?\n\n\t' +
-        'Y => Yes\n\tN => No\n\t blank => Not Answered',
-        yesNoNA);
       let answer18 = validatePrompt(
         '18) Does the participant regularly use systemic or inhalation ' +
         'corticosteroids 4 or more times a week?\n\n\t' +
@@ -135,6 +130,12 @@ $(document).ready(function() {
         '25) Is the participant on current alcohol, barbiturate or ' +
         'benzodiazepine use or dependence (in the opinion of the the study ' +
         'physician)?\n\n\tY => Yes\n\tN => No\n\t blank => Not Answered',
+        yesNoNA);
+      let answer28 = validatePrompt(
+        '28) Are there any conditions that, in the opinion of the study\'s' +
+        ' physician, make it medically inappropriate for the participant to ' +
+        'enroll in the program?\n\n\t' +
+        'Y => Yes\n\tN => No\n\t blank => Not Answered',
         yesNoNA);
       let answer29 = validatePrompt(
         '29) After revision of lab results, neuropsychological evaluation ' +
@@ -193,7 +194,7 @@ $(document).ready(function() {
       // Question 17)
       assignValue(
         'select[name="17_clinically_significant_condition"]',
-        answer17);
+        answer28);
       // Question 18)
       assignValue('select[name="18_corticosteroids"]', answer18);
       // Question 19)
@@ -209,7 +210,7 @@ $(document).ready(function() {
       // Question 25)
       assignValue('select[name="25_substance_dependence"]', answer25);
       // Question 28)
-      assignValue('select[name="28_other_condition"]', answer17);
+      assignValue('select[name="28_other_condition"]', answer28);
       // Question 29)
       assignValue('select[name="29_eligibility"]', answer29);
       // Question 29date)
