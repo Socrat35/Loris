@@ -33,14 +33,28 @@ $db =& \Database::singleton();
 $tpl_data['baseurl'] = $config->getSetting('url');
 $tpl_data['css']     = $config->getSetting('css');
 
+// Initialize the GET parameter array
+$parameters = array();
+
+// Due to previously published addresses using the following format:
+// preventad.loris.ca/acknowledgements/acknowledgements.php?date = [2017-12-01]
+// Given the error of having spaces between the variable name and the assignment operator,
+// those spaces are converted to underscores by PHP
+// For each parameter
+foreach($_GET as $name => $value){
+    // Trim the erroneous underscores to the right and add the parameter and its value
+    // to the parameters array
+    $parameters[rtrim($name, '_')] = $value;
+}
+
 // Blocking condition on the parameters, their numbers and their names
-if( count($_GET) > 2
-    || (count($_GET) == 2 && array_diff(array_keys($_GET), ["date", "authors"]))
-    || (count($_GET) == 1 && array_diff(array_keys($_GET), ["date"]))){
+if( count($parameters) > 2
+    || (count($parameters) == 2 && array_diff(array_keys($parameters), ["date", "authors"]))
+    || (count($parameters) == 1 && array_diff(array_keys($parameters), ["date"]))){
     // Assigning error message
     $tpl_data["error"] = 1;
     // Copying the GET parameter keys passed
-    $tpl_data["parameters"] = array_keys($_GET);
+    $tpl_data["parameters"] = array_keys($parameters);
     // Passing error message to data object
     $smarty->assign($tpl_data);
     // Rendering the error page
@@ -48,11 +62,39 @@ if( count($_GET) > 2
     exit(1);
 }
 
+// Due to previously published address using the following format:
+// preventad.loris.ca/acknowledgements/acknowledgements.php?date = [2017-12-01]
+// The address' date field needs to be regexed to extract the date into the correct format of YYYY-MM-DD
+if(isset($parameters["date"])){
+    $date = preg_filter(
+        // Note the greedyness of the spaces but the optionality of the brackets
+        '/(\s*\[?\s*)(\d{4}-\d{2}-\d{2})(\s*\]?\s*)/',
+        '$2',
+        // The decoding function brings back the spaces instead of %20
+        urldecode($parameters["date"])
+    );
+    if(empty($date)){
+        // Assigning error message
+        $tpl_data["error"] = 2;
+        // Passing error message to data object
+        $smarty->assign($tpl_data);
+        // Rendering the error page
+        $smarty->display('acknowledgements_errors.tpl');
+        exit(2);
+    }
+}else{
+    // Assigning error message
+    $tpl_data["error"] = 2;
+    // Passing error message to data object
+    $smarty->assign($tpl_data);
+    // Rendering the error page
+    $smarty->display('acknowledgements_errors.tpl');
+    exit(2);
+}
 // Blocking condition for the date validity
-if( !isset($_GET["date"])
-    || strlen($_GET["date"]) != 10
-    || !(bool)strtotime($_GET["date"])
-    || date("Y-m-d", strtotime($_GET["date"])) != $_GET["date"]){
+if( strlen($date) != 10
+    || !(bool)strtotime($date)
+    || date("Y-m-d", strtotime($date)) != $date){
     // Assigning error message
     $tpl_data["error"] = 2;
     // Passing error message to data object
@@ -63,7 +105,7 @@ if( !isset($_GET["date"])
 }
 
 // Blocking condition for values being passed to the flag parameter authors
-if ( isset($_GET["authors"]) && ($_GET["authors"] !== "on" && !empty($_GET["authors"]))){
+if ( isset($parameters["authors"]) && ($parameters["authors"] !== "on" && !empty($parameters["authors"]))){
     // Assigning error message
     $tpl_data["error"] = 3;
     // Passing error message to data object
@@ -74,9 +116,9 @@ if ( isset($_GET["authors"]) && ($_GET["authors"] !== "on" && !empty($_GET["auth
 }
 
 // Assignation of the verified request parameters
-$publication_date = $_GET["date"];
+$publication_date = $date;
 $publication_date_name = "publication_date";
-$authorship = isset($_GET["authors"]);
+$authorship = isset($parameters["authors"]);
 
 // Definition of the columns for the Smarty Template
 $columns = array(
