@@ -1,5 +1,22 @@
-body {
+html, body {
   min-width: 900px;
+  height: 100vh;
+  overflow: auto;
+}
+
+.error-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.error-container > div{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.error-container > div:first-child > img {
 }
 
 ul {
@@ -25,7 +42,7 @@ span.emphasis {
 div.page-header > img {
   width: 30%;
   float: left;
-  margin-bottom: 500px;
+  margin-bottom: auto;
 }
 
 div.page-header > h1 {
