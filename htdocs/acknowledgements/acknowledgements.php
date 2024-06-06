@@ -47,10 +47,32 @@ foreach($_GET as $name => $value){
     $parameters[rtrim($name, '_')] = $value;
 }
 
+// Blocking condition for an empty request directly on the php script
+if(count($parameters) == 0){
+    // Assigning error message
+    $tpl_data["error"] = 6;
+    // Passing error message to data object
+    $smarty->assign($tpl_data);
+    // Rendering the error page
+    $smarty->display('acknowledgements_errors.tpl');
+    exit(6);
+}
+
 // Blocking condition on the parameters, their numbers and their names
 if( count($parameters) > 2
-    || (count($parameters) == 2 && array_diff(array_keys($parameters), ["date", "authors"]))
-    || (count($parameters) == 1 && array_diff(array_keys($parameters), ["date"]))){
+    || (count($parameters) == 2 && (
+        array_diff(array_keys($parameters), ["date", "authors"]) &&
+        array_diff(array_keys($parameters), ["DR", "authors"]) &&
+        array_diff(array_keys($parameters), ["Stage", "authors"])
+        )
+    )
+    || (count($parameters) == 1 && (
+        array_diff(array_keys($parameters), ["date"]) &&
+        array_diff(array_keys($parameters), ["DR"]) &&
+        array_diff(array_keys($parameters), ["Stage"])
+        )
+    )
+){
     // Assigning error message
     $tpl_data["error"] = 1;
     // Copying the GET parameter keys passed
@@ -67,12 +89,13 @@ if( count($parameters) > 2
 // The address' date field needs to be regexed to extract the date into the correct format of YYYY-MM-DD
 if(isset($parameters["date"])){
     $date = preg_filter(
-        // Note the greedyness of the spaces but the optionality of the brackets
+        // Note the greedy-ness of the spaces but the optionality of the brackets
         '/(\s*\[?\s*)(\d{4}-\d{2}-\d{2})(\s*\]?\s*)/',
         '$2',
         // The decoding function brings back the spaces instead of %20
         urldecode($parameters["date"])
     );
+    // Blocking condition for no date
     if(empty($date)){
         // Assigning error message
         $tpl_data["error"] = 2;
@@ -82,26 +105,107 @@ if(isset($parameters["date"])){
         $smarty->display('acknowledgements_errors.tpl');
         exit(2);
     }
+    // Blocking condition for the date validity
+    if( strlen($date) != 10
+        || !(bool)strtotime($date)
+        || date("Y-m-d", strtotime($date)) != $date){
+        // Assigning error message
+        $tpl_data["error"] = 2;
+        // Passing error message to data object
+        $smarty->assign($tpl_data);
+        // Rendering the error page
+        $smarty->display('acknowledgements_errors.tpl');
+        exit(2);
+    }
+    // If the DR parameter is set
+}elseif(isset($parameters['DR'])){
+    // Blocking condition for bad format
+    if(!preg_match("/^\d+\.\d+$/", $parameters['DR'])){
+        // Assigning error message
+        $tpl_data["error"] = 4;
+        // Passing error message to data object
+        $smarty->assign($tpl_data);
+        // Rendering the error page
+        $smarty->display('acknowledgements_errors.tpl');
+        exit(4);
+    }
+    // Getting the data releases
+    $dataReleasesDB = $db->pselect(
+        "SELECT ID,
+                Version,
+                ReleaseDate
+        FROM acknowledgements_data_release_dates
+        ORDER BY ReleaseDate DESC",
+        array()
+    );
+    // Initializing array
+    $dataReleases = array();
+    // Re-indexing on Data release date ID
+    foreach($dataReleasesDB as $ID => $release){
+        $dataReleases[$release["Version"]] = $release["ReleaseDate"];
+    }
+    // Blocking condition if the data release doesn't exist
+    if(!isset($dataReleases[$parameters['DR']])){
+        // Assigning error message
+        $tpl_data["error"] = 5;
+        // Assigning existing versions for error message
+        $tpl_data["data_releases"] = $dataReleases;
+        // Passing error message to data object
+        $smarty->assign($tpl_data);
+        // Rendering the error page
+        $smarty->display('acknowledgements_errors.tpl');
+        exit(5);
+    }
+    $date = $dataReleases[$parameters['DR']];
+    // If the Stage parameter is set
+}elseif(isset($parameters['Stage'])){
+    // Blocking condition for bad format
+    if(!preg_match("/^\d+$/", $parameters['Stage'])){
+        // Assigning error message
+        $tpl_data["error"] = 8;
+        // Passing error message to data object
+        $smarty->assign($tpl_data);
+        // Rendering the error page
+        $smarty->display('acknowledgements_errors.tpl');
+        exit(8);
+    }
+    // Getting the data releases
+    $stageReleasesDB = $db->pselect(
+        "SELECT ID,
+                Version,
+                ReleaseDate
+        FROM acknowledgements_stage_release_dates
+        ORDER BY ReleaseDate DESC",
+        array()
+    );
+    // Initializing array
+    $stageReleases = array();
+    // Re-indexing on Data release date ID
+    foreach($stageReleasesDB as $ID => $stage){
+        $stageReleases[$stage["Version"]] = $stage["ReleaseDate"];
+    }
+    // Blocking condition if the data release doesn't exist
+    if(!isset($stageReleases[$parameters['Stage']])){
+        // Assigning error message
+        $tpl_data["error"] = 9;
+        // Assigning existing versions for error message
+        $tpl_data["stage_releases"] = $stageReleases;
+        // Passing error message to data object
+        $smarty->assign($tpl_data);
+        // Rendering the error page
+        $smarty->display('acknowledgements_errors.tpl');
+        exit(9);
+    }
+    $date = $stageReleases[$parameters['Stage']];
+    // Should be impossible to get here, but guarding regardless
 }else{
     // Assigning error message
-    $tpl_data["error"] = 2;
+    $tpl_data["error"] = 7;
     // Passing error message to data object
     $smarty->assign($tpl_data);
     // Rendering the error page
     $smarty->display('acknowledgements_errors.tpl');
-    exit(2);
-}
-// Blocking condition for the date validity
-if( strlen($date) != 10
-    || !(bool)strtotime($date)
-    || date("Y-m-d", strtotime($date)) != $date){
-    // Assigning error message
-    $tpl_data["error"] = 2;
-    // Passing error message to data object
-    $smarty->assign($tpl_data);
-    // Rendering the error page
-    $smarty->display('acknowledgements_errors.tpl');
-    exit(2);
+    exit(7);
 }
 
 // Blocking condition for values being passed to the flag parameter authors
