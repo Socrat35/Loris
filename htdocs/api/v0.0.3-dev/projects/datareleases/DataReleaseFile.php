@@ -45,6 +45,11 @@ class DataReleaseFile extends \Loris\API\Projects\DataReleases
 
         parent::__construct($method, $projectName);
 
+        // Turning off the API for data release until usage has been clarified
+        $this->header("HTTP/1.1 501 Not Implemented");
+        $this->error(['error' => 'Currently unavailable. Please use the web front-end.']);
+        $this->safeExit(0);
+
         $results = $this->getDatabaseDir();
         if (true) {
             $this->header("HTTP/1.1 404 Not Found");

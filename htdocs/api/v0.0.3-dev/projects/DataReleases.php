@@ -45,6 +45,11 @@ class DataReleases extends \Loris\API\APIBase
 
         parent::__construct($method);
 
+        // Turning off the API for data release until usage has been clarified
+        $this->header("HTTP/1.1 501 Not Implemented");
+        $this->error(['error' => 'Currently unavailable. Please use the web front-end.']);
+        $this->safeExit(0);
+
         try {
             $this->_project = $this->Factory->project($projectName);
         } catch (\LorisException $e) {
