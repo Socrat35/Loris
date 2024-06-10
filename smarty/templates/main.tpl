@@ -455,15 +455,10 @@
             {/if}
                 <center>
                     <ul id="navlist" style="margin-top: 5px; margin-bottom: 2px;">
-                        <li id="active">
-                            |
-                        </li>
+                        <li id="active">|</li>
                         {foreach from=$links item=link}
                                 <li>
-                                    <a href="{$link.url}" target="{$link.windowName}" rel="noopener noreferrer">
-                                        {$link.label}
-                                    </a>
-                                    |
+                                    <a href="{$link.url}" target="{$link.windowName}" rel="noopener noreferrer">{$link.label}</a>|
                                 </li>
                         {/foreach}
                     </ul>
@@ -472,9 +467,7 @@
                     Powered by LORIS &copy; {$currentyear}. All rights reserved.
                 </div>
       		<div align="center" colspan="1">
-                    Created by <a href="http://mcin-cnim.ca/" target="_blank">
-                         MCIN
-                    </a>
+                    Created by <a href="https://mcin.ca" target="_blank" rel="noopener noreferrer">MCIN</a>
                 </div>
             </div>
         {/if}
