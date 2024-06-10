@@ -24,40 +24,44 @@
   <header class="header">
     <div class="container">
       <div class="flex-wrapper">
-        <div class="loris-logo">
-          <a href="http://loris.ca/">
-            <img src="{$baseurl}/images/LORIS_logo_white.svg" class="loris-logo" alt="Loris Logo"/>
+        <div class="loris-logo col-md-4 col-xs-12 col-sm-6">
+          <a href="{$baseurl}"
+             rel="noopener noreferrer">
+            <img src="{$baseurl}/images/PreventAD_logo.svg" class="loris-logo img-responsive" alt="PreventAD Logo"/>
           </a>
         </div>
-        <div class="study-title hidden-xs">
+        <div class="study-title hidden-xs col-md-8 col-sm-6">
           {$study_title}
         </div>
-        <div class="mcgill-logo">
-          <a href="https://mcgill.ca/" target="_blank">
-            <img src="{$baseurl}/images/mcgill_logo.png" alt="McGill University"/>
+        <div class="mcgill-logo hidden-xs hidden-sm col-md-4">
+          <a href="https://mcgill.ca/"
+             target="_blank"
+             rel="noopener noreferrer">
+            <img src="{$baseurl}/images/mcgill_logo.png" class="img-responsive" alt="McGill University"/>
             </a>
             </div>
-        <div class="github-logo">
-          <a href="https://github.com/aces/Loris" target="_blank" rel="noopener noreferrer">
-            <img src="{$baseurl}/images/GitHub-Mark-Light-64px.png" alt="Github"/>
-          </a>
-        </div>
       </div>
     </div>
   </header>
-
   <section class="main-content">
     {$workspace}
   </section>
-
   <footer class="footer">
-    Powered by <a href="http://www.loris.ca/" target="_blank">LORIS</a>
-    | GPL-3.0 &copy; {$currentyear} <br/>
-    Developed at
-    <a href="http://www.mni.mcgill.ca" target="_blank">
-      Montreal Neurological Institute and Hospital
-    </a>
-    by <a href="http://mcin-cnim.ca" target="_blank">MCIN</a>
+      <div class="container">
+          <div class="flex-wrapper">
+              <div class="container col-md-2 col-md-offset-2">
+                  <a href="https://github.com/aces/Loris"
+                     target="_blank"
+                     rel="noopener noreferrer">
+                      <img src="/images/LORIS_logo_white.svg" class="img-responsive"/>
+                  </a>
+              </div>
+              <div class="container col-md-4">
+                  <p>Powered by <a href="https://loris.ca" target="_blank" rel="noopener noreferrer">LORIS</a> | GPL-3.0 &copy; {$currentyear}<br/>Developed at <a href="https://www.mcgill.ca/neuro/" target="_blank" rel="noopener noreferrer">Montreal Neurological Institute and Hospital</a> by <a href="https://mcin.ca" target="_blank" rel="noopener noreferrer">MCIN</a></p>
+              </div>
+              <div class="container col-md-2 col-md-offset-2"></div>
+          </div>
+      </div>
   </footer>
   <script src="{$baseurl}/js/modernizr/modernizr.min.js"/>
   <script>
