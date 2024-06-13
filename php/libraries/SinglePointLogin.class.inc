@@ -338,9 +338,9 @@ class SinglePointLogin
             if ($row['Active'] == 'N'
                 || $this->disabledDueToInactivity($username, 365)
             ) {
-                $this->_lastError = "Your account has been deactivated."
-                    . " Please contact your project administrator to"
-                    . " reactivate this account.";
+                $this->_lastError = "<p>Dear user,</p>"
+                    . "<p>We've updated our terms of use related to publication policy, so your account has been temporarily deactivated to ensure you can read and agree to the new terms.</p>"
+                    . "<p>To reactivate your account, please send a message to <a href='mailto: jennifer.tremblay-mercier@douglas.mcgill.ca' rel='noreferrer noopener' target='_blank'>jennifer.tremblay-mercier@douglas.mcgill.ca</a> with the object: REACTIVATION OF ACCOUNT - NEW TERMS OF USE.</p>";
                 $this->insertFailedDetail(
                     "user account not active",
                     $setArray
@@ -381,7 +381,7 @@ class SinglePointLogin
                 && ($currentDay < strtotime($row['active_from']))
             ) {
                 $this->_lastError = "Your account is not active yet."
-                    ." According to our records it will be active from 
+                    ." According to our records it will be active from
             {$row['active_from']}"
                 . " Please contact your project administrator";
                 return false;
@@ -398,9 +398,9 @@ class SinglePointLogin
             if ($row['Active'] == 'N'
                 || $this->disabledDueToInactivity($username, 365)
             ) {
-                $this->_lastError = "Your account has been deactivated."
-                    . " Please contact your project administrator to"
-                    . " reactivate this account.";
+                $this->_lastError = "<p>Dear user,</p>"
+                    . "<p>We've updated our terms of use related to publication policy, so your account has been temporarily deactivated to ensure you can read and agree to the new terms.</p>"
+                    . "<p>To reactivate your account, please send a message to <a href='mailto: jennifer.tremblay-mercier@douglas.mcgill.ca' rel='noreferrer noopener' target='_blank'>jennifer.tremblay-mercier@douglas.mcgill.ca</a> with the object: REACTIVATION OF ACCOUNT - NEW TERMS OF USE.</p>";
                 $this->insertFailedDetail(
                     "user account not active",
                     $setArray
@@ -579,7 +579,7 @@ class SinglePointLogin
     {
         $DB    =& Database::singleton();
         $query = "SELECT MAX(Login_timestamp) as Login_timestamp
-                  FROM user_login_history 
+                  FROM user_login_history
                   WHERE UserID = :username";
 
         $row        = $DB->pselectRow($query, array('username' => $username));
