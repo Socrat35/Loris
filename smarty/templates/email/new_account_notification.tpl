@@ -323,10 +323,10 @@ Subject: Account Request: {$firstname} {$lastname} from {$instance}
                             <!-- START MAIN CONTENT AREA -->
                             <tr>
                                 <td class="wrapper">
-                                    <img src="https://preventad-registered-dev.loris.ca/images/PreventAD_logo.svg" alt="PREVENT-AD Logo" width="250" height="150" border="0" style="border:0; outline:none; text-decoration:none; display:block; float: right;">
+                                    <img src="{$instance}/images/PreventAD_logo.png" alt="PREVENT-AD Logo" width="250" height="150" border="0" style="border:0; outline:none; text-decoration:none; display:block; float: right;">
                                     <p>Hello {$administrator},</p>
                                     <p>A user just requested a new account on the {$instance} instance. Here are the details:</p>
-                                    <li>
+                                    <ul>
                                         <li><span class="bold">UserID: </span>{$email}</li>
                                         <li><span class="bold">First Name: </span>{$firstname}</li>
                                         <li><span class="bold">Last Name: </span>{$lastname}</li>
