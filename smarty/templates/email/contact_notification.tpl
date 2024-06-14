@@ -323,7 +323,7 @@ Subject: Contact Request: {$name} from {$instance}
                             <!-- START MAIN CONTENT AREA -->
                             <tr>
                                 <td class="wrapper">
-                                    <img src="https://preventad-registered-dev.loris.ca/images/PreventAD_logo.svg" alt="PREVENT-AD Logo" width="250" height="150" border="0" style="border:0; outline:none; text-decoration:none; display:block; float: right;">
+                                    <img src="{$instance}/images/PreventAD_logo.png" alt="PREVENT-AD Logo" title="PREVENT-AD Logo" width="250" height="150" border="0" style="border:0; outline:none; text-decoration:none; display:block; float: right;">
                                     <p>Hello {$administrator},</p>
                                     <p>{$name} just sent a request through the contact form from the {$instance} instance. Here are the details:</p>
                                     <ul>
