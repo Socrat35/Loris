@@ -205,22 +205,38 @@ class NDB_BVL_Battery
             )
         );
 
-        // generate the double data entry commentid
-        $ddeCommentID = 'DDE_'.$commentID;
-
-        // insert the dde into the test table
-        $success = $DB->insert($testName, array('CommentID' => $ddeCommentID));
-
-        // insert the dde into the flag table
-        $success = $DB->insert(
-            'flag',
+        // Check if the instrument is registered as DDE2 in DB
+        $isInstrumentDDE = $DB->pselectOne(
+            "SELECT
+                        cs.ID
+                    FROM ConfigSettings cs
+                    INNER JOIN Config c ON (c.ConfigID = cs.ID)
+                    WHERE cs.Name = :ConfigProperty
+                        AND Value = :TestName",
             array(
-             'SessionID' => $sessionData['SessionID'],
-             'Test_name' => $testName,
-             'CommentID' => $ddeCommentID,
-             'UserID'    => $sessionData['UserID'],
+                "ConfigProperty" => "DoubleDataEntryInstruments",
+                "TestName" => $testName
             )
         );
+        // If the instrument is registered as DDE2
+        if(!empty($isInstrumentDDE)){
+            // generate the double data entry commentid
+            $ddeCommentID = 'DDE_'.$commentID;
+
+            // insert the dde into the test table
+            $success = $DB->insert($testName, array('CommentID' => $ddeCommentID));
+
+            // insert the dde into the flag table
+            $success = $DB->insert(
+                'flag',
+                array(
+                    'SessionID' => $sessionData['SessionID'],
+                    'Test_name' => $testName,
+                    'CommentID' => $ddeCommentID,
+                    'UserID'    => $sessionData['UserID'],
+                )
+            );
+        }
 
         return $commentID;
 
