@@ -176,7 +176,7 @@ function addResetButtonListener() {
     // Empty the comments
     $('#Comments').val('');
     // Empty the text input fields
-    $('input[type=text]').each(function(index, element) {
+    $('input.text-question[type=text]').each(function(index, element) {
       $(element).val('');
     });
     // Empty the radios
@@ -206,7 +206,7 @@ function addResetButtonListener() {
 function addSubmitButtonListener() {
   $('#fire_control').on('submit click', function(e) {
     // For all text inputs and textareas
-    $('textarea, input[type=text]').each(function(index, element) {
+    $('textarea, input.text-question[type=text]').each(function(index, element) {
       // If not empty
       if ($(element).val() !== '') {
         // Use regex to find invalid characters
