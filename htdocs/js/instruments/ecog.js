@@ -349,49 +349,39 @@ function makeSessionButtonTooltip(e) {
   HTMLString += `<p>Date of Timepoint: ${dateVisit}</p>`;
   // Get the flag status of the instrument for both entries
   let flagStatus1 = $(e).attr('data_Data_entry');
-  let flagStatus2 = $(e).attr('data_DDE_Data_entry');
   // Calculate the color of the flag based on value
   let flagStatus1Color = flagStatus1 === 'Complete' ? 'good-value' : flagStatus1 === 'Incomplete' ? 'bad-value' : 'emphasis';
-  let flagStatus2Color = flagStatus2 === 'Complete' ? 'good-value' : flagStatus2 === 'Incomplete' ? 'bad-value' : 'emphasis';
   // Get the completion of the instrument for both entries
   let instrumentStatus1 = $(e).attr('data_Completion');
-  let instrumentStatus2 = $(e).attr('data_DDE_Completion');
   // Calculate the color of the completion based on value
   let instrumentStatus1Color = instrumentStatus1 === 'Complete' ? 'good-value' : 'bad-value';
-  let instrumentStatus2Color = instrumentStatus2 === 'Complete' ? 'good-value' : 'bad-value';
   // Get the administration value for both entries
   let administration1 = $(e).attr('data_Administration');
-  let administration2 = $(e).attr('data_DDE_Administration');
   // Calculate the color of the administration based on value
   let administration1Color = administration1 === 'All' ? 'good-value' : administration1 === 'Partial' ? 'bad-value' : 'emphasis';
-  let administration2Color = administration2 === 'All' ? 'good-value' : administration2 === 'Partial' ? 'bad-value' : 'emphasis';
   // Append a short table with all the calculated values and colors
   HTMLString += `<table>
       <thead>
           <th></th>
           <th class="text-center bold">#1</th>
-          <th class="text-center bold">#2</th>
       </thead>
       <tbody>
           <tr class="text-center">
               <td>Administration</td>
               <td><span class="${administration1Color}">${administration1 === undefined || administration1 === '' ? 'Empty' : administration1}</span></td>
-              <td><span class="${administration2Color}">${administration2 === undefined || administration2 === '' ? 'Empty' : administration2}</span></td>
           </tr>
           <tr class="text-center">
               <td>Flag</td>
               <td><span class="${flagStatus1Color}">${flagStatus1 === undefined || flagStatus1 === '' ? 'Empty' : flagStatus1}</span></td>
-              <td><span class="${flagStatus2Color}">${flagStatus2 === undefined || flagStatus2 === '' ? 'Empty' : flagStatus2}</span></td>
           </tr>
           <tr class="text-center">
               <td>Instrument</td>
               <td><span class="${instrumentStatus1Color}">${instrumentStatus1}</span></td>
-              <td><span class="${instrumentStatus2Color}">${instrumentStatus2}</span></td>
           </tr>
       </tbody>
   </table>`;
   // Remove the attributes used as data sources
-  $(e).removeAttr('data_level data_Visit_label data_visit data_Date_visit data_Data_entry data_DDE_Data_entry data_Completion data_DDE_Completion data_Administration data_DDE_Administration');
+  $(e).removeAttr('data_level data_Visit_label data_visit data_Date_visit data_Data_entry data_Completion data_Administration ');
   // Add a bootstrap tooltip using the generated string to the node
   addBootstrapTooltip($(e).prop('id'), HTMLString);
 }
