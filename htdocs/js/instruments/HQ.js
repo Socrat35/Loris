@@ -38,11 +38,13 @@ $(document).ready(function() {
   dynamicallyAdjustWindowDifferenceBackgroundColor();
   // Removes the info tables for the data entry page
   adjustDefaultDisplayElementsForDataEntry();
-  // Add listeners for select elements
+  // Add select input listeners
   addSelectInputListeners();
-  // Add listeners for radio elements
-  addRadioInputListeners();
-  // Add listeners for the buttons
+  // Add listeners for hidden inputs
+  addHiddenInputListeners();
+  // Add listeners for double-clicks on questions
+  addDoubleClickListeners();
+  // Add button listeners
   addButtonListeners();
 });
 
@@ -76,7 +78,7 @@ function dynamicallyAdjustWindowDifferenceBackgroundColor() {
  */
 function adjustDefaultDisplayElementsForDataEntry() {
   // If the data entry table structure exists (data entry page only)
-  if ($('#data-entry-table4').length) {
+  if ($('#data-entry-table1').length) {
     // Detach the current lorisworkspace div
     let currentSpace = $('#lorisworkspace').detach();
     // Remove the two information tables from their div and append the
@@ -104,56 +106,85 @@ function addSelectInputListeners() {
     let commentID = locationParameters[3];
     // Fetch the values of the select controls and assign them to variables
     let testLanguage = $('#test_language').val();
-    let testVersion = $('#test_version').val();
     // Reload the page following the format accepted by the rewrite rules
     window.location.href = '/' +
       candID + '/' +
       sessionID + '/' +
       'HQ/Data_Entry/?' +
       'Test_Language=' + testLanguage +
-      '&Test_Version=' + testVersion +
       '&commentID=' + commentID;
   });
 }
 
 /**
- * Function which adds a listener to the radio buttons of the justified
- * binary questions to update the associated justifications' visibility and
- * required status when the checked state of the radio buttons change.
+ * Function which adds listeners to the hidden inputs of each question
+ * used to track the administration status of individual questions.
  */
-function addRadioInputListeners() {
-  // On state change of the radio buttons for justified binary questions
-  $('input.justified-binary-question').on('change', function(e) {
-    // QuestionID value
-    let identifier = $(e.target).prop('name');
-    // Node of the table row matching the changed radio button value
-    let parent = $(e.target).parents()[4];
-    // If the checked value is Yes
-    if ($(e.target).val() === '1') {
-      // Show the cell with the justification
-      $('td:nth-child(2)', parent).removeClass('hidden');
-      // Set the english justification to required
-      $('#' + identifier + '_justification_en').prop('required', true);
-      // If the checked value is No
-    } else if ($(e.target).val() === '0') {
-      // Hide the cell with the justification
-      $('td:nth-child(2)', parent).addClass('hidden');
-      // Remove the requirement for the english justification
-      $(`#${identifier}_justification_en`).prop('required', false);
-      // If the value is something else (blank in this case due to reset)
-    } else {
-      // Hide the cell with the justification
-      $('td:nth-child(2)', parent).addClass('hidden');
-      // Remove the requirement for the english justification
-      $(`#${identifier}_justification_en`).prop('required', false);
+function addHiddenInputListeners() {
+  // On change of the value of the administration status of a question
+  $('input[type="hidden"].question-administration').on('change', function(e) {
+    let value = $(e.target).val();
+    let container = $(e.target).parent();
+    // If the administration is set to true
+    if (value === 'true') {
+      // Toggle the container's class to question-asked
+      $(container).toggleClass('question-asked question-not-asked');
+      // For each radio and textarea controls in the container
+      $('input[type="radio"], textarea', container).each(function(index, element) {
+        // Enable
+        $(element).prop('disabled', false);
+      });
+      // If the administration is set to false
+    } else if (value === 'false') {
+      // Toggle the container class
+      $(container).toggleClass('question-asked question-not-asked');
+      // For each radio and textarea controls in the container
+      $('input[type="radio"], textarea', container).each(function(index, element) {
+        // If a radio element
+        if ($(element)[0].tagName === 'INPUT') {
+          // Set checked to false
+          $(element).prop('checked', false);
+          // If textarea
+        } else {
+          // Set to empty
+          $(element).val('');
+        }
+        // Disable both radio and textarea elements
+        $(element).prop('disabled', true);
+      });
     }
   });
-  // Initialize the states of the justifications
-  $('input.justified-binary-question:checked').trigger('change');
 }
 
 /**
- * Function which adds listeners for the buttons.
+ * Function which adds a double-click listener to question containers.
+ */
+function addDoubleClickListeners() {
+  // On double-clicking a question container
+  $('.question-container').on('dblclick', function(e) {
+    // If the form is not frozen
+    if ($('input[type="hidden"][name="frozen"]').val() === '') {
+      // Get container if event is triggered on element of container
+      let container = $(e.target).closest('.question-container');
+      // Get the administration value of the question
+      let value = $('input[type="hidden"].question-administration', container).val();
+      // If the question is administered
+      if (value === 'true') {
+        // Set administration to false
+        $('input[type="hidden"].question-administration', container).val('false');
+        // If the question is not administered
+      } else {
+        // Set administration to true
+        $('input[type="hidden"].question-administration', container).val('true');
+      }
+      // Trigger a change event on the question administration hidden input
+      $('input[type="hidden"].question-administration', container).trigger('change');
+    }
+  });
+}
+
+/**
+ * Function which adds the listeners for the various buttons.
  */
 function addButtonListeners() {
   // Add reset button listener
@@ -163,50 +194,64 @@ function addButtonListeners() {
 }
 
 /**
- * Function which resets the data entry page to a blank value instead of
- * the starting state of the standard reset action.
+ * Function which adds a listener on the reset button of the data entry page.
  */
 function addResetButtonListener() {
   // For clicks on the reset button
   $('#reset_button').on('click', function(e) {
     // Prevent default behavior
     e.preventDefault();
-    // Set instrument embargo to default values
+    // Set instrument embargo and language to default values
     $('#Embargo').val('Internal');
-    // Empty the comments
-    $('#Comments').val('');
-    // Empty the text input fields
-    $('input.text-question[type=text]').each(function(index, element) {
-      $(element).val('');
-    });
+    $('#test_language').val('fr');
     // Empty the radios
     $('input[type=radio]').each(function(index, element) {
       $(element).prop('checked', false);
     });
-    // Empty the justifications textareas
-    $('.justified-binary-justification-cell > div > textarea')
-      .each(function(index, element) {
-        // Empty the textarea
-        $(element).val('');
-        // Remove the requirement property
-        $(element).prop('required', false);
+    // Empty the text boxes
+    $('textarea').each(function(index, element) {
+      $(element).val('');
+    });
+    // Setting values for default justified binary questions (Q1-Q5)
+    for (let i = 1; i < 6; i++) {
+      // Get hidden input node and question container
+      let hiddenInput = $(`input[type="hidden"][name="q${i}_administration"]`);
+      let container = $(hiddenInput).parent();
+      // Set administration to true
+      $(hiddenInput).val('true');
+      // Enable radio and textarea elements
+      $('.question-answer > label > input, .question-comment > textarea', container).each(function(index, element) {
+        $(element).prop('disabled', false);
       });
-    // Hide the justifications cells
-    $('.justified-binary-justification-cell').each(function(index, element) {
-      $(element).addClass('hidden');
+      // Set class to question-asked
+      $(container).removeClass('question-not-asked').addClass('question-asked');
+    }
+    // Setting values for default text questions
+    let textQuestions = {6: 'true', 7: 'false', 8: 'false', 9: 'false', 10: 'false'};
+    // For each question, set defaults
+    Object.keys(textQuestions).forEach(function(questionID) {
+      // Get hidden input node and question container
+      let hiddenInput = $(`input[type="hidden"][name="q${questionID}_administration"]`);
+      let container = $(hiddenInput).parent();
+      // Set administration to default value for the question
+      $(hiddenInput).val(textQuestions[questionID]);
+      // Enable textarea elements on question that are active by default
+      $('.question-answer > textarea', container).each(function(index, element) {
+        $(element).prop('disabled', textQuestions[questionID] !== 'true');
+      });
+      // Set the container class to match the default administration
+      $(container).removeClass('question-not-asked question-asked').addClass(textQuestions[questionID] === 'true' ? 'question-asked' : 'question-not-asked');
     });
   });
 }
 
 /**
- * Function to add a listener to the submit button to do a more complex
- * validation of values in the front-end to avoid data loss with failed
- * server-side validation.
+ * Function which adds a listener to the submit button of the data entry page.
  */
 function addSubmitButtonListener() {
   $('#fire_control').on('submit click', function(e) {
-    // For all text inputs and textareas
-    $('textarea, input.text-question[type=text]').each(function(index, element) {
+    // For all textareas, check that no invalid characters are used
+    $('textarea').each(function(index, element) {
       // If not empty
       if ($(element).val() !== '') {
         // Use regex to find invalid characters
@@ -216,45 +261,81 @@ function addSubmitButtonListener() {
         if (matches !== null) {
           // Stop the propagation
           e.preventDefault();
-          // If the element is a text input
-          if ($(element)[0].tagName === 'INPUT') {
-            // Display an error message appropriate for a text answer
-            fancyErrorPrompt(
-              'Error',
-              `The answer ${$(element).val()} uses unsupported characters:` + matches);
-            // If the element is a textarea
-          } else if ($(element)[0].tagName === 'TEXTAREA') {
-            // Display an error message appropriate for a textarea
-            fancyErrorPrompt(
-              'Error',
-              `The ${$(element).prop('name').slice(-2) === 'fr' ? 'French' : 'English'} justification of question ${$(element).attr('displayNumber')}) uses unsupported characters:` + matches);
-          }
+          // Display an error message appropriate for a textarea
+          fancyErrorPrompt(
+            'Error',
+            `The field ${$(element).prop('name')} uses unsupported characters:` + matches);
           // Break out of the each() loop using a false return
           return false;
         }
       }
     });
-    // Validate that all defined justified binary questions have their mandatory justification
-    $('input.justified-binary-question[type=radio]').each(function(index, element) {
-      // Get the name and display number of the radio button
-      let name = $(element).prop('name');
-      let displayNumber = $(element).attr('displayNumber');
-      // If the radio button is a Yes and the matching English justification
-      // is empty
-      if (
-        $(`input[type=radio][name=${name}]:checked`).val() === '1' &&
-        $(`#${name}_justification_en`).val() === '') {
-        // Prevent propagation
-        e.preventDefault();
-        // Display an appropriate message
-        fancyErrorPrompt(
-          'Error',
-          `Question ${displayNumber}) needs a mandatory English justification.`);
-        // Break out of the each() loop using a false return
-        return false;
-      }
-    });
+    // Validate bounded answers
+    if (!_validateBoundedAnswer(
+      'question7',
+      300,
+      70,
+      'Please provide the systolic blood pressure as an integer between 70 and 300 mmHg.')) {
+      e.preventDefault();
+      return false;
+    }
+    if (!_validateBoundedAnswer(
+      'question8',
+      200,
+      40,
+      'Please provide the diastolic blood pressure as an integer between 40 and 200 mmHg.')) {
+      e.preventDefault();
+      return false;
+    }
+    if (!_validateBoundedAnswer(
+      'question9',
+      200,
+      40,
+      'Please provide the heartbeat as an integer between 40 and 200 beats per minute.')) {
+      e.preventDefault();
+      return false;
+    }
+    if (!_validateBoundedAnswer(
+      'question10',
+      300.0,
+      40.0,
+      'Please provide the weight as a float between 40.0 and 300.0 pounds.',
+      false)) {
+      e.preventDefault();
+      return false;
+    }
   });
+}
+
+/**
+ * Function which validates the provided numerical answer based on specified
+ * bounds and number types, prompts the user in case of error and then returns
+ * the validation result.
+ * @param {string} id           id of the element to be validated
+ * @param {Number} upperBound   Upper bound of the valid numbers
+ * @param {Number} lowerBound   Lower bound of the valid numbers
+ * @param {string} errorMessage Error message to be displayed for invalid answers
+ * @param {boolean} isInteger   Is the answer an integer or a float
+ * @returns {boolean}   Was the answer provided valid or not
+ * @private
+ */
+function _validateBoundedAnswer(id, upperBound, lowerBound, errorMessage, isInteger = true) {
+  // Extract the value from the id provided
+  let text = $(`#${id}`).val();
+  // If the element exists and the value is not empty
+  if (text !== undefined && text !== '') {
+    // If the value is an integer, parseInt, otherwise parseFloat
+    let value = isInteger ? Number.parseInt(text, 10) : Number.parseFloat(text);
+    // If the value can't be parsed or is outside of bounds
+    if (isNaN(value) || value > upperBound || value < lowerBound) {
+      // Prompt the error message
+      fancyErrorPrompt('Error', errorMessage);
+      // Return invalid
+      return false;
+    }
+  }
+  // Return valid
+  return true;
 }
 
 /**

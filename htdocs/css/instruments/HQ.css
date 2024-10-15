@@ -36,6 +36,10 @@ optgroup[label="External Users"] > option {
   font-style: italic;
 }
 
+h4.panel-title {
+  text-align: center;
+}
+
 option {
   text-align: center;
   font-size: smaller;
@@ -90,6 +94,30 @@ h3 {
   border-radius: 10px;
 }
 
+#longitudinal-results-table > thead > tr > th {
+  text-align: center;
+}
+
+#longitudinal-results-table > tbody > tr > td {
+  text-align: center;
+}
+
+#longitudinal-results-table > tbody > tr > td.not-asked {
+  background-color: darkgray;
+  font-style: italic;
+  font-weight: bold;
+  color: lightgoldenrodyellow;
+}
+
+#longitudinal-results-table > tbody > tr > td.not-answered {
+  background-color: lightgray;
+  font-style: italic;
+}
+
+#longitudinal-results-table > tbody > tr > td:first-child {
+  font-weight: bold;
+}
+
 #embargo_container {
   margin-top: 30px;
 }
@@ -122,70 +150,64 @@ textarea {
   vertical-align: middle;
 }
 
-.tooltip-inner {
-  max-width: 1000px !important;
+.question-container > div > textarea {
+  color: black;
 }
 
-.table-container {
-  display: flex;
+.question-container {
+  padding: 20px;
+  border-radius: 20px;
   margin-top: 20px;
-  justify-content: center;
-  align-items: center;
+  margin-bottom: 20px;
+}
+
+.question-asked {
+  color: white;
+  background-color: #064785;
+}
+
+.question-not-asked {
+  color: black;
+  font-style: italic;
+  opacity: 75%;
+  background-color: lightgray;
+}
+
+.row.equal {
+  display: flex;
   flex-wrap: wrap;
 }
 
-.data-entry-table > tbody > tr,
-.data-entry-table > tbody > tr > td{
-  text-align: center;
-  vertical-align: middle;
-}
-
-.data-entry-table > tbody > tr > td > div{
-  padding: 15px;
-}
-
-.data-entry-table > tbody > tr > td > div > h4{
-  font-weight: bold;
-}
-
-.data-entry-table > tbody > tr > td > h4{
-  font-weight: bold;
-}
-
-.data-entry-table > tbody > tr > td > div > div > label{
+.question-text > p{
   font-size: large;
+  padding: 0px 20px 0px 20px;
+  margin-bottom: 0px;
 }
 
-.table-container > div > table.data-entry-table > thead > tr > th,
-.table-container > div > table.data-entry-table > tbody > tr > th,
-.table-container > div > table.data-entry-table > tbody > tr > td{
-  text-align: center;
-  vertical-align: middle;
+.question-answer {
+  margin-bottom: 0px;
 }
 
-.table-container > div > table.calculated-scores-table > thead > tr > th,
-.table-container > div > table.calculated-scores-table > tbody > tr > th,
-.table-container > div > table.calculated-scores-table > tbody > tr > td{
-  text-align: center;
-  vertical-align: middle;
+.question-answer > textarea {
+  margin-top: 20px;
 }
 
-.table-title {
-  font-size: medium;
-  font-weight: bolder;
-}
-
-.table-subtitle{
-  font-size: small;
+h4 {
   font-weight: bold;
+  font-size: larger;
 }
 
 input[type=text] {
   text-align: center;
 }
 
+textarea:focus::placeholder,
 input:focus::placeholder {
   color: transparent;
+}
+
+.question-comment {
+  margin-top: 15px;
 }
 
 /* XS */
@@ -200,9 +222,6 @@ input:focus::placeholder {
   .settings-container {
     text-align: left;
   }
-  .table-container input[type=text] {
-    font-size: x-small;
-  }
 }
 
 /* MD */
@@ -210,17 +229,11 @@ input:focus::placeholder {
   .settings-container {
     text-align: right;
   }
-  .table-container input[type=text] {
-    font-size: 0.35em;
-  }
 }
 
 /* LG */
 @media only screen and (min-width : 1200px) {
   .settings-container {
     text-align: right;
-  }
-  .table-container input[type=text] {
-    font-size: smaller;
   }
 }
