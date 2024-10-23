@@ -674,6 +674,7 @@ function displayChartedResults(data) {
         }
       },
       y: {
+        center: 0,
         label: {
           text: 'Z-Score',
           position: 'outer-middle'
