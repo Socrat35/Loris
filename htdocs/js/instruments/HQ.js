@@ -316,7 +316,7 @@ function addSubmitButtonListener() {
  * @param {Number} lowerBound   Lower bound of the valid numbers
  * @param {string} errorMessage Error message to be displayed for invalid answers
  * @param {boolean} isInteger   Is the answer an integer or a float
- * @returns {boolean}   Was the answer provided valid or not
+ * @return {boolean}   Was the answer provided valid or not
  * @private
  */
 function _validateBoundedAnswer(id, upperBound, lowerBound, errorMessage, isInteger = true) {
