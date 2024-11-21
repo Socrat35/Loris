@@ -397,12 +397,12 @@ function buildChartDataObject() {
     // Take the visit label from the first cell of the row
     let visitLabel = (($('td:nth-child(1) > a', element).html()).replace('<br><span class="font-xsmall">', ' (')).replace('</span>', ')');
     // Take the value from the 4th cell, the Z-Score for A
-    let scoreA = $('td:nth-child(4)', element).html();
+    let scoreA = $('td:nth-child(4) > span', element).html();
     // If the value is empty, null or doesn't exist, set to null, otherwise, parse
     // to float
     scoreA = scoreA === undefined || scoreA === null || scoreA === '' ? null : Number.parseFloat(scoreA);
     // Take the value from the 7th cell, the Z-Score for B
-    let scoreB = $('td:nth-child(7)', element).html();
+    let scoreB = $('td:nth-child(7) > span', element).html();
     // If the value is empty, null or doesn't exist, set to null, otherwise, parse
     // to float
     scoreB = scoreB === undefined || scoreB === null || scoreB === '' ? null : Number.parseFloat(scoreB);
