@@ -529,7 +529,7 @@ function buildChartDataObject() {
     let visitLabel = (($('td:nth-child(1) > a', element).html())
       .replace('<br><span class="font-xsmall">', ' (')).replace('</span>', ')');
     // Take the value from the 3rd cell, the Z-Score for Trial 1
-    let trial1 = $('td:nth-child(3)', element).html();
+    let trial1 = $('td:nth-child(3) > span', element).html();
     // If the value is empty, null or doesn't exist, set to null, otherwise,
     // parse to float
     trial1 = trial1 === undefined ||
@@ -538,7 +538,7 @@ function buildChartDataObject() {
               null :
               Number.parseFloat(trial1);
     // Take the value from the 4th cell, the Z-Score for Trial 1-5
-    let trial15 = $('td:nth-child(4)', element).html();
+    let trial15 = $('td:nth-child(4) > span', element).html();
     // If the value is empty, null or doesn't exist, set to null, otherwise,
     // parse to float
     trial15 = trial15 === undefined ||
@@ -547,7 +547,7 @@ function buildChartDataObject() {
               null :
               Number.parseFloat(trial15);
     // Take the value from the 5th cell, the Z-Score for the interference trial
-    let interference = $('td:nth-child(5)', element).html();
+    let interference = $('td:nth-child(5) > span', element).html();
     // If the value is empty, null or doesn't exist, set to null, otherwise,
     // parse to float
     interference = interference === undefined ||
@@ -556,7 +556,7 @@ function buildChartDataObject() {
                     null :
                     Number.parseFloat(interference);
     // Take the value from the 6th cell, the Z-Score for immediate recall
-    let immediate = $('td:nth-child(6)', element).html();
+    let immediate = $('td:nth-child(6) > span', element).html();
     // If the value is empty, null or doesn't exist, set to null, otherwise,
     // parse to float
     immediate = immediate === undefined ||
@@ -565,7 +565,7 @@ function buildChartDataObject() {
                 null :
                 Number.parseFloat(immediate);
     // Take the value from the 7th cell, the Z-Score for delayed recall
-    let delayed = $('td:nth-child(7)', element).html();
+    let delayed = $('td:nth-child(7) > span', element).html();
     // If the value is empty, null or doesn't exist, set to null, otherwise,
     // parse to float
     delayed = delayed === undefined ||
