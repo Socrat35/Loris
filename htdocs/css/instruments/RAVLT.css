@@ -117,6 +117,10 @@ span.good-value {
   color: green;
 }
 
+span.concerning-value {
+  color: darkorange;
+}
+
 span.bad-value {
   color: red;
 }
