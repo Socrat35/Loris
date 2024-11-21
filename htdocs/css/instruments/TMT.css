@@ -141,6 +141,10 @@ span.bad-value {
   color: red;
 }
 
+span.concerning-value {
+  color: darkorange;
+}
+
 .no-top-border{
   border-top-style: hidden !important;
 }
