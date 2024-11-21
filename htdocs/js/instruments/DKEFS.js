@@ -566,7 +566,7 @@ function buildChartDataObject() {
 function parseNormalizedCell(column, element) {
   // Take the value from the cell of the column identified using the
   // context provided
-  let result = $('td:nth-child(' + column + ')', element).html();
+  let result = $('td:nth-child(' + column + ') > span', element).html();
   // If the value is empty, null or doesn't exist, set to null, otherwise,
   // parse to float
   result = result === undefined ||
