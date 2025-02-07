@@ -1621,7 +1621,7 @@ function _addSubmitButtonListener() {
     // Validate that no comments (task or general) features
     // unsupported characters
     $('textarea[name$="_Comments"]').each(function() {
-      let matches = $(this).val().match(/[^a-z',\.\-àâçéèêëîïôûùüÿñæœ ]/gi);
+      let matches = $(this).val().match(/[^0-9a-z',\.\-àâçéèêëîïôûùüÿñæœ ]/gi);
       if (matches) {
         e.preventDefault();
         errors[$(this).prop('name')] = matches.toString();
