@@ -1447,21 +1447,17 @@ function _addTaskCheatButtonsListeners() {
     let cheat = $(e.target).attr('correctness');
     // Switch based on the task
     switch (task) {
-      case '1':
-        // For all datalist linked text input of task 1
-        $('#task1-trials-container > div[trial] > div.wordlist-trial-container > input[list]').each(function() {
-          // Set to empty, add hiding class and remove classifying classes
-          $(this).val('')
-            .addClass('hiddenInput')
-            .removeClass('good-word repetition intrusion');
-        });
-        // Update the shown hidden inputs
-        _showFirstEmptyWordlistInput();
-        // For all calculated fields of task 1
-        $('#task1-container input.calculated-field').each(function() {
-          // Set calculated field to 0
-          $(this).val('0');
-        });
+      case '1a':
+        _setTask1TrialToZero(1);
+        break;
+      case '1b':
+        _setTask1TrialToZero(2);
+        break;
+      case '1c':
+        _setTask1TrialToZero(3);
+        break;
+      case '1d':
+        _setTask1TrialToZero(4);
         break;
       case '2':
         $('#task2-container input[type="radio"]').each(function() {
@@ -1589,6 +1585,39 @@ function _addTaskCheatButtonsListeners() {
       default: break;
     }
   });
+}
+
+/**
+ *
+ * Function to reset the words container of trial from task 1 and set the
+ * matching score to 0.
+ *
+ * @param {number} trialNumber    Identifier of the trial to set to zero
+ * @private
+ */
+function _setTask1TrialToZero(trialNumber) {
+  // For all datalist linked text input of task 1
+  $(`#task1-trials-container > div[trial]:nth-child(${trialNumber}) > div.wordlist-trial-container > input[list]`).each(function() {
+    // Set to empty, add hiding class and remove classifying classes
+    $(this).val('')
+      .addClass('hiddenInput')
+      .removeClass('good-word repetition intrusion');
+  });
+  // Update the shown hidden inputs
+  _showFirstEmptyWordlistInput();
+  // Set the score of the trial to 0
+  $(`#T1_Score_${trialNumber}`).val('0');
+  // Add total, repetitions and intrusions if all trial scores are 0
+  if ($('#T1_Score_1').val() === '0' &&
+      $('#T1_Score_2').val() === '0' &&
+      $('#T1_Score_3').val() === '0' &&
+      $('#T1_Score_4').val() === '0') {
+    $('#T1_Repetitions, #T1_Intrusions, #T1_Total').val('0');
+    // If some score are non-zero, launch total calculation by triggering
+    // change event on the trial score input
+  } else {
+    $(`#T1_Score_${trialNumber}`).trigger('change');
+  }
 }
 
 /**
