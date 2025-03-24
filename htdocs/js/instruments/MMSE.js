@@ -284,14 +284,14 @@ function processDateString(dateString) {
   // Calculate the day of the year using the difference between the date
   // object created and the start of the year of the date object
   let dayOfYear = Math.round((dateObject - new Date(dateObject.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24)) - 1;
-  // Magic numbers come from the March 21st(80), June 21st(172),
-  // September 21st(264) and December 21st(355) which are the approximate
+  // Magic numbers come from the March 20th(78), June 21st(171),
+  // September 22nd(264) and December 21st(354) which are the approximate
   // season limits for the Northern Hemisphere
-  if (dayOfYear < 80 || dayOfYear >= 355) {
+  if (dayOfYear < 78 || dayOfYear >= 354) {
     dateInfos.season = 'winter';
-  } else if (dayOfYear >= 80 && dayOfYear < 172) {
+  } else if (dayOfYear >= 78 && dayOfYear < 171) {
     dateInfos.season = 'spring';
-  } else if (dayOfYear >= 172 && dayOfYear < 264) {
+  } else if (dayOfYear >= 171 && dayOfYear < 264) {
     dateInfos.season = 'summer';
   } else {
     dateInfos.season = 'autumn';
