@@ -563,8 +563,8 @@ function _addSubmitButtonListener() {
     for (let i = 1; i < 7; i++) {
       // Get the score
       let score = Number.parseFloat($(`#C${i}_Score`).val());
-      // If the score is larger or equal to one
-      if (score >= 1) {
+      // If the score is larger or equal to 0.5
+      if (score >= 0.5) {
         // Add score and category to the object
         impairedCategories[i] = score;
       }
@@ -574,7 +574,7 @@ function _addSubmitButtonListener() {
       // If the partial entry input is not set
       if ($('#isPartialEntryAcceptable').val() === '') {
         e.preventDefault();
-        let messageString = '<p>Categories with an impairment score of 1 or ' +
+        let messageString = '<p>Categories with an impairment score of 0.5 or ' +
           'more are present:</p><br/>';
         Object.keys(impairedCategories).forEach(function(category) {
           messageString += `<p>Category ${category}: Score of ${impairedCategories[category]}</p>`;
