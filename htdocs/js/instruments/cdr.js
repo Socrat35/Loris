@@ -588,7 +588,7 @@ function _addSubmitButtonListener() {
           showCancelButton: true,
           showConfirmButton: true,
           cancelButtonText: 'Back to data entry',
-          confirmButtonText: 'Confirmed',
+          confirmButtonText: 'Confirmed (Remember to actually save your results by clicking "Save" again)',
           text: messageString,
           html: true
           // If nag screen is confirmed
