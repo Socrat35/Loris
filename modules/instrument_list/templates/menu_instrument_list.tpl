@@ -20,7 +20,7 @@
 	    <th>Double Data Entry Form</th>
 	    <th>Double Data Entry Status</th>
     </tr>
-    </thead>	
+    </thead>
 	{section name=instrument loop=$instruments[group]}
 	<tbody>
 	   	<tr{if $instruments[group][instrument].isDirectEntry} class="directentry"{/if}>
