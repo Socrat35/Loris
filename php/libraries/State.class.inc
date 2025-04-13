@@ -111,6 +111,9 @@ class State
                               'demographics',
                              );
 
+        // Get base URL value
+        $baseurl = \NDB_Factory::singleton()->settings()->getBaseURL();
+
         $caller =& NDB_Caller::singleton();
         if (isset($_REQUEST['test_name'])
             && $_REQUEST['test_name'] == 'timepoint_list'
