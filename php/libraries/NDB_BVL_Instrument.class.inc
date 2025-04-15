@@ -168,7 +168,7 @@ class NDB_BVL_Instrument extends NDB_Page
         $class = "NDB_BVL_Instrument_$instrument";
 
         // Ensure 'page' is a string.
-        $page = isset($page) ? $page : '';
+        $page = $page ?? '';
 
         // Make sure the instrument class has been included/required!
         $factory = NDB_Factory::singleton();
@@ -1126,7 +1126,7 @@ class NDB_BVL_Instrument extends NDB_Page
     function _getQuickformDate($databaseValue)
     {
         throw new Exception(
-            "The function _getQuickformDate has been depricated.
+            "The function _getQuickformDate has been depricated. 
             Please contact LORIS developer mail list for support."
         );
     }
@@ -1179,8 +1179,6 @@ class NDB_BVL_Instrument extends NDB_Page
                     }
                 } else if (substr($elname, -7) != "_status"
                     && !in_array($elname, array("page", "subtest"))
-                    && $this->form->form[$elname]['type'] != "file"
-                    && $this->form->form[$elname]['multiple'] != "multiple"
                 ) {
                     $errors[$elname] = "Required.";
                     if ($this->XINDebug) {
@@ -1839,7 +1837,7 @@ class NDB_BVL_Instrument extends NDB_Page
      *
      * @return none
      */
-    function addNumericElement($field, $label, $options = array())
+    function addNumericElement($field, $label, $options = null)
     {
         $group[] = $this->createText($field, $label);
         $this->WrapperNumericElements[$field] = $group[0];
@@ -1858,10 +1856,9 @@ class NDB_BVL_Instrument extends NDB_Page
             $field . "_group",
             array(array(array("Value must be numeric.", 'numeric')))
         );
-        $rules_array = array_merge(array($field.'_status{@}=={@}'),$options);
         $this->XINRegisterRule(
             $field,
-            $rules_array,
+            array($field . '_status{@}=={@}'),
             'This field is required',
             $field . '_group'
         );

@@ -581,7 +581,7 @@ class NDB_BVL_Feedback
             )";
             $qparams['Username'] = $this->_username;
         } else {
-            $query            .= " AND ft.Active ='Y'
+            $query            .= " AND ft.Active ='Y' 
                                    AND FIND_IN_SET (c.CenterID,:CentID)";
             $qparams['CentID'] = implode(',', $user->getCenterIDs());
         }

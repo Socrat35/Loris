@@ -619,11 +619,11 @@ class NDB_Menu_Filter extends NDB_Menu
 
         $this->setTemplateVar(
             'filterfield',
-            $_GET['filter']['order']['field'] ?: ''
+            $_GET['filter']['order']['field'] ?? ''
         );
         $this->setTemplateVar(
             'filterfieldOrder',
-            $_GET['filter']['order']['fieldOrder'] ?: ''
+            $_GET['filter']['order']['fieldOrder'] ?? ''
         );
         $this->setTemplateVar('TotalItems', $this->TotalItems);
 
@@ -711,7 +711,7 @@ class NDB_Menu_Filter extends NDB_Menu
         $this->setTemplateVar(
             'csvFile',
             $_REQUEST['test_name']
-            . ($_REQUEST['subtest'] ?: $_REQUEST['submenu'] ?: '')
+            . ($_REQUEST['subtest'] ?? $_REQUEST['submenu'] ?? '')
             . date('-Y_m_d')
         );
 

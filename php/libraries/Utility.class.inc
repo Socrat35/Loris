@@ -53,10 +53,10 @@ class Utility
             );
         }
         $dob = array(
-            'year' => $matches[1],
-            'mon'  => $matches[2],
-            'day'  => $matches[3],
-        );
+                'year' => $matches[1],
+                'mon'  => $matches[2],
+                'day'  => $matches[3],
+               );
 
         if (!preg_match(
             "/([0-9]{4})-?([0-9]{1,2})-?([0-9]{1,2})/",
@@ -68,10 +68,10 @@ class Utility
             );
         }
         $testdate = array(
-            'year' => $matches[1],
-            'mon'  => $matches[2],
-            'day'  => $matches[3],
-        );
+                     'year' => $matches[1],
+                     'mon'  => $matches[2],
+                     'day'  => $matches[3],
+                    );
 
         if ($testdate['day'] < $dob['day']) {
             $testdate['day'] += 30;
@@ -83,10 +83,10 @@ class Utility
         }
 
         $age = array(
-            'year' => $testdate['year'] - $dob['year'],
-            'mon'  => $testdate['mon'] - $dob['mon'],
-            'day'  => $testdate['day'] - $dob['day'],
-        );
+                'year' => $testdate['year'] - $dob['year'],
+                'mon'  => $testdate['mon'] - $dob['mon'],
+                'day'  => $testdate['day'] - $dob['day'],
+               );
 
         return $age;
     }
@@ -336,33 +336,33 @@ class Utility
             $unit = "";
 
             switch($seq['@']['type']) {
-                case 'alpha':
-                    $unit .= '[a-z]';
-                    break;
+            case 'alpha':
+                $unit .= '[a-z]';
+                break;
 
-                case 'alphanumeric':
-                    $unit .= '[0-9a-z]';
-                    break;
+            case 'alphanumeric':
+                $unit .= '[0-9a-z]';
+                break;
 
-                case 'numeric':
-                    $unit .= '[0-9]';
-                    break;
+            case 'numeric':
+                $unit .= '[0-9]';
+                break;
 
-                case 'static':
+            case 'static':
+                $unit .= '('.$seq['#'].')';
+                break;
+
+            case 'set':
+                if (strpos($seq['#'], '|') !== false) {
                     $unit .= '('.$seq['#'].')';
-                    break;
+                } else {
+                    $unit .= '['.$seq['#'].']';
+                }
+                break;
 
-                case 'set':
-                    if (strpos($seq['#'], '|') !== false) {
-                        $unit .= '('.$seq['#'].')';
-                    } else {
-                        $unit .= '['.$seq['#'].']';
-                    }
-                    break;
-
-                case 'siteAbbrev':
-                    $unit .= $siteAbbrev;
-                    break;
+            case 'siteAbbrev':
+                $unit .= $siteAbbrev;
+                break;
             } // end switch
 
             $length = "";
@@ -537,19 +537,19 @@ class Utility
 
         for ($i=0;$i<strlen($string);$i++) {
             switch ($string[$i]) {
-                case $delimiter:
-                    if ($string[$i-1]!="\\") {
-                        $output =substr_replace($output, "", $output_index, 1);
-                        $output_index--;
-                    }
-                    break;
+            case $delimiter:
+                if ($string[$i-1]!="\\") {
+                    $output =substr_replace($output, "", $output_index, 1);
+                    $output_index--;
+                }
+                break;
 
-                case $seperator:
-                    if ($state%2==0) {
-                        $output        =substr_replace($output, "{@}", $output_index, 1);
-                        $output_index +=2;
-                    }
-                    break;
+            case $seperator:
+                if ($state%2==0) {
+                    $output        =substr_replace($output, "{@}", $output_index, 1);
+                    $output_index +=2;
+                }
+                break;
             }
             $output_index++;
         }
@@ -1166,12 +1166,12 @@ class Utility
     }
 
     /**
-     * Coverts array into CSV string
-     *
-     * @param array $array the array to be converted
-     *
-     * @return string CSV string of data
-     */
+    * Coverts array into CSV string
+    *
+    * @param array $array the array to be converted
+    *
+    * @return string CSV string of data
+    */
     static function arrayToCSV($array)
     {
         $fp = fopen("php://temp", 'w+');
@@ -1278,14 +1278,14 @@ class Utility
         $last = strtolower($val[strlen($val)-1]);
 
         switch($last) {
-            case 'g':
-                return $val * 1024 * 1024 * 1024;
-            case 'm':
-                return $val * 1024 * 1024;
-            case 'k':
-                return $val * 1024;
-            default:
-                return $val;
+        case 'g':
+            return $val * 1024 * 1024 * 1024;
+        case 'm':
+            return $val * 1024 * 1024;
+        case 'k':
+            return $val * 1024;
+        default:
+            return $val;
         }
     }
 }

@@ -118,48 +118,16 @@ class TimePoint
         $db =& Database::singleton();
 
         // get user data from database
-        $query = "SELECT
-                        s.ID AS SessionID,
-                        s.CandID,
-                        p.Name AS PSC,
-                        s.CenterID,
-                        s.VisitNo,
-                        s.Visit_label,
-                        s.SubprojectID,
-                        s.Submitted,
-                        s.Current_stage,
-                        s.Screening,
-                        s.Date_screening,
-                        s.Visit,
-                        s.Date_visit,
-                        s.Approval,
-                        s.Date_approval,
-                        s.Active,
-                        s.registeredBy,
-                        s.UserID,
-                        u.Real_name,
-                        s.Hardcopy_request,
-                        s.BVLQCStatus,
-                        s.BVLQCType,
-                        s.BVLQCExclusion,
-                        s.Scan_done,
-                        s.RevisionNeeded,
-                        s.Session_Notes,
-                        s.Consensus_MCI_State,
-                        s.Consensus_Date,
-                        s.Consensus_Comments,
-                        s.Committee_MCI_State,
-                        s.Committee_Date,
-                        s.Committee_Comments,
-                        s.Blood_Draw_Research,
-                        s.Blood_Draw_Clinical,
-                        s.Other_Biosamples_Collected,
-                        s.ModalityID
+        $query = "SELECT s.ID AS SessionID, s.CandID, p.Name AS PSC, s.CenterID,
+                         s.VisitNo, s.Visit_label, s.SubprojectID, s.Submitted,
+                         s.Current_stage, s.Screening, s.Date_screening, s.Visit,
+                         s.Date_visit, s.Approval, s.Date_approval, s.Active,
+                         s.registeredBy, s.UserID, u.Real_name, s.Hardcopy_request,
+                         s.BVLQCStatus, s.BVLQCType, s.BVLQCExclusion, s.Scan_done
                     FROM session AS s
-                    LEFT JOIN psc AS p USING (CenterID)
-                    LEFT JOIN users AS u on (s.registeredBy=u.UserID)
-                    WHERE s.ID = :SID
-                      AND s.Active = 'Y'";
+                        LEFT JOIN psc AS p USING (CenterID)
+                        LEFT JOIN users AS u on (s.registeredBy=u.UserID)
+                    WHERE s.ID = :SID AND s.Active = 'Y'";
         $row   = $db->pselectRow($query, array('SID' => $sessionID));
 
         // store user data in object property

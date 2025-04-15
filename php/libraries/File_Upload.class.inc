@@ -714,14 +714,6 @@ class File_Upload
     }
 
 
-    function setFieldName($f){
-        $this->fieldName = $f;
-    }
-    
-    function getFieldName(){
-        return $this->fieldName;
-    }
-
     /**
     * Adds an error to the error log
     *

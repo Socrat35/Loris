@@ -459,7 +459,6 @@ class User extends UserPermissions
 
         return true;
     }
-
     /**
      * Check if user belongs to DCC
      *
@@ -532,7 +531,5 @@ class User extends UserPermissions
         return $this->hasPermission($code)
             && $this->hasCenter($center_id);
     }
-
-
 }
 ?>

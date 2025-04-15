@@ -207,7 +207,7 @@ class NDB_Caller
             ) {
                 // No subtest, load the menu
 
-                $mode = $_REQUEST['mode'] ?: '';
+                $mode = $_REQUEST['mode'] ?? '';
                 if ($submenu !== null) {
                     $html = $this->loadMenu($submenu, $mode);
                 } else {
@@ -217,7 +217,7 @@ class NDB_Caller
                 $this->type = 'menu';
                 return $html;
             } else if ($this->existsAndRequire("NDB_Form_$test_name.class.inc")) {
-                $identifier = $_REQUEST['identifier'] ?: '';
+                $identifier = $_REQUEST['identifier'] ?? '';
                 $html       = $this->loadForm($test_name, $subtest, $identifier);
 
                 $this->type = 'form';
@@ -229,57 +229,21 @@ class NDB_Caller
             error_log("Could not load Loris module $test_name.");
             exit(-1);
         } else {
-            // Old precedence style for "modules"
-            // This (except for instruments and reliability) should be removed
-            // in LORIS 18.0 now that all modules are updated, but we forgot
-            // to include a warning in the 16.x line so that we could have
-            // removed it in 17.0.
-            error_log(
-                "php/libraries 'modules' are deprecated and will be "
-                . " removed in a future release. Please update your code in "
-                . "$test_name to use proper LORIS style modules. See the loris-dev"
-                . "  mailing list for help if required."
-            );
-            // it is a menu
-            $proj_menu = $base . "project/libraries/NDB_Menu_$test_name.class.inc";
-            $php_menu  = $base . "php/libraries/NDB_Menu_$test_name.class.inc";
-
-            $proj_menu_filter = $base . "project/libraries/"
-                                      . "NDB_Menu_Filter_$test_name.class.inc";
-            $php_menu_filter  = $base . "php/libraries/"
-                                      . "NDB_Menu_Filter_$test_name.class.inc";
-
-            $proj_menu_filter_form = $base . "project/libraries/"
-                . "NDB_Menu_Filter_Form_$test_name.class.inc";
-            $php_menu_filter_form  = $base . "php/libraries/"
-                . "NDB_Menu_Filter_Form_$test_name.class.inc";
-
-            if (empty($subtest) && ($this->existsAndRequire($proj_menu)
-                || $this->existsAndRequire($php_menu)
-                || $this->existsAndRequire($proj_menu_filter)
-                || $this->existsAndRequire($php_menu_filter)
-                || $this->existsAndRequire($proj_menu_filter_form)
-                || $this->existsAndRequire($php_menu_filter_form))
+            // Reliability and instruments aren't "real" modules. They probably
+            // should be at some point in the future.
+            $proj_reliable = $base . "project/reliability/"
+                                   . "NDB_Reliability_$test_name.class.inc";
+            if ($this->existsAndRequire($proj_reliable)
             ) {
 
-                $mode = $_REQUEST['mode'] ?: '';
-                $html = $this->loadMenu($test_name, $mode);
+                $html = $this->loadReliability(
+                    $test_name,
+                    $subtest,
+                    $_REQUEST['identifier'],
+                    $_REQUEST['reliability_center_id']
+                );
 
-                $this->type = 'menu';
-                return $html;
-            }
-
-            // it is a form
-            $proj_form = $base."project/libraries/NDB_Form_$test_name.class.inc";
-            $php_form  = $base."php/libraries/NDB_Form_$test_name.class.inc";
-            if ($this->existsAndRequire($proj_form)
-                || $this->existsAndRequire($php_form)
-            ) {
-
-                $identifier = $_REQUEST['identifier'] ?: '';
-                $html       = $this->loadForm($test_name, $subtest, $identifier);
-
-                $this->type = 'form';
+                $this->type = 'reliability';
                 return $html;
             }
 
@@ -364,7 +328,7 @@ class NDB_Caller
         if (method_exists($menu, 'getFeedbackPanel')) {
             $this->feedbackPanel = $menu->getFeedbackPanel(
                 $_REQUEST['candID'],
-                $_REQUEST['sessionID'] ?: null
+                $_REQUEST['sessionID'] ?? null
             );
         }
         if (method_exists($menu, 'save')) {

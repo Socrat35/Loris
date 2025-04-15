@@ -711,13 +711,13 @@ class LorisForm
     protected function selectHTML($el)
     {
         $strOptions    = '';
-        $options       = $el['options'] ?: array();
+        $options       = $el['options'] ?? array();
         $cls           = '';
         $changehandler = '';
         $multiple      = '';
         $id            = '';
         $disabled      = '';
-        $name          = $el['name'] ?: '';
+        $name          = $el['name'] ?? '';
 
         if (!(is_array($options) || $options instanceof Traversable)) {
             // $options is not Traversable and will throw an error
@@ -2046,7 +2046,7 @@ class LorisForm
     {
         foreach ($submitKeys as $key) {
             if (!isset($this->form[$key])) {
-                $tp = $this->groupMapping[$key] ?: null;
+                $tp = $this->groupMapping[$key] ?? null;
                 $el = is_null($tp) ?
                     null :
                     $this->form[$tp['groupName']]['elements'][$tp['index']];

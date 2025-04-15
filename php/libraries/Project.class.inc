@@ -155,8 +155,6 @@ class Project
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Set this project's id
      *
      * @param integer $projectId This project's id
@@ -169,7 +167,6 @@ class Project
     }
 
     /**
->>>>>>> v18.0.0-rc1
      * Get this project's name
      *
      * @return string This project's name
@@ -180,8 +177,6 @@ class Project
     }
 
     /**
-<<<<<<< HEAD
-=======
      * Set this project's name
      *
      * @param string $projectName This project's name
@@ -194,7 +189,6 @@ class Project
     }
 
     /**
->>>>>>> v18.0.0-rc1
      * Get the project's recruitment target.
      *
      * @note If the database value is null then the return value will be the sum of

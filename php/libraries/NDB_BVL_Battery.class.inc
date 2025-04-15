@@ -205,38 +205,22 @@ class NDB_BVL_Battery
             )
         );
 
-        // Check if the instrument is registered as DDE2 in DB
-        $isInstrumentDDE = $DB->pselectOne(
-            "SELECT
-                        cs.ID
-                    FROM ConfigSettings cs
-                    INNER JOIN Config c ON (c.ConfigID = cs.ID)
-                    WHERE cs.Name = :ConfigProperty
-                        AND Value = :TestName",
+        // generate the double data entry commentid
+        $ddeCommentID = 'DDE_'.$commentID;
+
+        // insert the dde into the test table
+        $success = $DB->insert($testName, array('CommentID' => $ddeCommentID));
+
+        // insert the dde into the flag table
+        $success = $DB->insert(
+            'flag',
             array(
-                "ConfigProperty" => "DoubleDataEntryInstruments",
-                "TestName" => $testName
+             'SessionID' => $sessionData['SessionID'],
+             'Test_name' => $testName,
+             'CommentID' => $ddeCommentID,
+             'UserID'    => $sessionData['UserID'],
             )
         );
-        // If the instrument is registered as DDE2
-        if(!empty($isInstrumentDDE)){
-            // generate the double data entry commentid
-            $ddeCommentID = 'DDE_'.$commentID;
-
-            // insert the dde into the test table
-            $success = $DB->insert($testName, array('CommentID' => $ddeCommentID));
-
-            // insert the dde into the flag table
-            $success = $DB->insert(
-                'flag',
-                array(
-                    'SessionID' => $sessionData['SessionID'],
-                    'Test_name' => $testName,
-                    'CommentID' => $ddeCommentID,
-                    'UserID'    => $sessionData['UserID'],
-                )
-            );
-        }
 
         return $commentID;
 
@@ -281,65 +265,12 @@ class NDB_BVL_Battery
         $this->_assertBatterySelected();
 
         // craft the select query
-        $query = "SELECT f.Test_name FROM ";
-        if(!is_null($stage)) $query .= "test_battery AS b, test_names as t, ";
-        $query .= " flag f JOIN session s
+        $query   = "SELECT f.Test_name FROM flag f JOIN session s
             ON (s.ID=f.SessionID)
             JOIN candidate c ON (c.CandID=s.CandID)
             WHERE f.SessionID=:SID AND s.Active='Y' AND c.Active='Y'
                AND f.CommentID NOT LIKE 'DDE%'";
         $qparams = array('SID' => $this->sessionID);
-
-	$timepoint = '';
-	$originalvl = $visit_label;
-	if (strlen($visit_label) > 2 && substr_compare($visit_label, 'lego_phantom', 0, 12) != 0 && substr_compare($visit_label, 'living_phantom', 0, 14) != 0) {
-		$timepoint = substr($visit_label, 5, 2);
-		$visit_label = substr($visit_label, 3, 2);
-	}
-        //'scanner' phantom
-        if (substr_compare($visit_label, 'lego_phantom', 0, 12) == 0 || substr_compare($visit_label, 'living_phantom', 0, 14) == 0) {
-                $timepoint = '';
-                $visit_label = 'phantom';
-        }
-        if(!is_null($stage)) {
-            if(!is_null($visit_label)) {
-                $query .= " AND b.Visit_label = '$visit_label'";
-            } else {
-                $query .= " OR b.Visit_label IS NULL";
-            }
-        }
-	if(($timepoint == '06' || $timepoint == '18') && $visit_label != 'TL') {
-        	$query .= " AND b.Timepoint = 'other'";
-	}
-        if($visit_label == 'WA' || $visit_label == 'MA') {
-                if ($timepoint == '01' || $timepoint == '02' || $timepoint == '03') {
-                    $query .= " AND b.Timepoint = '$timepoint'";
-                } elseif ($timepoint == '00') {
-                    $query .= " AND b.Timepoint IS NULL";
-                }
-        }
-//        if ($timepoint == '60') {
-//                $query .= " AND b.Timepoint = '60'";
-//        }
-        if(!is_null($stage)) {
-            $query .= " AND t.Test_name=b.Test_name AND b.Stage='$stage'";
-            if(!is_null($SubprojectID)) {
-                $query .= " AND (b.SubprojectID IS NULL OR b.SubprojectID='$SubprojectID')";
-            }
-        }
-
-        $Date_visit_query = "SELECT Date_visit FROM session WHERE ID=$this->sessionID";
-        $Date_visit  = $DB->pselectOne($Date_visit_query, array());
-        $viz_label_query = "SELECT visit_label FROM session WHERE ID=$this->sessionID";
-        $viz_label = $DB->pselectOne($viz_label_query, array());
-        if (!($Date_visit >= "2018-09-19" && ($viz_label == "PREFU12" || $viz_label == "PREFU24" || $viz_label == "PREFU36" || $viz_label == "PREFU48" || $viz_label = "PREFU72" || $viz_label == "PREFU84" || $viz_label == "NAPFU12" || $viz_label == "NAPFU24" || $viz_label == "NAPFU36" || $viz_label = "NAPFU48" || $viz_label == "NAPFU72" || $viz_label == "NAPFU84" || $viz_label == "MCIFU12" || $viz_label == "MCIFU24"))) {
-            if (!($Date_visit >= "2017-08-11" && ($viz_label == "PREFU60" || $viz_label == "NAPFU60"))) {
-                $query .= " AND b.test_name!='TMT' ";
-                $query .= " AND b.test_name!='DKEFS' ";
-                $query .= " AND b.test_name!='RAVLT' ";
-            }
-        }
-
         $rows    = $DB->pselect($query, $qparams);
 
         // repackage the array
@@ -513,26 +444,14 @@ class NDB_BVL_Battery
                     AND b.Active='Y'
                     AND (SubprojectID=:SubprojID OR SubprojectID IS NULL)";
 
-        $timepoint = '';
-        $originalvl = $visit_label;
-        if (strlen($visit_label) > 2 && substr_compare($visit_label, 'lego_phantom', 0, 12) != 0 && substr_compare($visit_label, 'living_phantom', 0, 14) != 0) {
-            $timepoint = substr($visit_label, 5, 2);
-            $visit_label = substr($visit_label, 3, 2);
-	}
-        //'scanner' phantom
-        if (substr_compare($visit_label, 'lego_phantom', 0, 12) == 0 || substr_compare($visit_label, 'living_phantom', 0, 14) == 0) {
-            $timepoint = '';
-            $visit_label = 'phantom';
-        }
-
         if (!is_null($visit_label)) {
             $VisitBatteryExists = $DB->pselectOne(
                 "SELECT COUNT(*)
                     FROM test_battery
-                    WHERE Visit_label =:VL", // AND SubprojectID=:SubID",
+                    WHERE Visit_label =:VL AND SubprojectID=:SubID",
                 array(
                  'VL'    => $visit_label,
-                 //'SubID' => $SubprojectID,
+                 'SubID' => $SubprojectID,
                 )
             );
             if ($VisitBatteryExists > 0) {
@@ -546,19 +465,7 @@ class NDB_BVL_Battery
             $query         .= " AND b.Stage=:stg";
             $qparams['stg'] = $stage;
         }
-        if(($timepoint == '06' || $timepoint == '18') && $visit_label != 'TL') {
-                $query .= " AND b.Timepoint = 'other'";
-        }
-        if($visit_label == 'WA' || $visit_label == 'MA') {
-                if ($timepoint == '01' || $timepoint == '02' || $timepoint == '03') {
-                    $query .= " AND b.Timepoint = '$timepoint'";
-                } elseif ($timepoint == '00') {
-                    $query .= " AND b.Timepoint IS NULL";
-                }
-        }
-//        if ($timepoint == '60') {
-//                $query .= " AND b.Timepoint = '60'";
-//        }
+
         if (!is_null($center_ID)) {
             // return all instruments that match this center or all centers (null)
             $query         .= " AND (b.CenterID=:CID OR b.CenterID IS NULL)";
@@ -571,18 +478,6 @@ class NDB_BVL_Battery
 
         if ($firstVisit === false) {
             $query .= " AND (b.firstVisit IS NULL OR b.firstVisit='N')";
-        }
-
-        $Date_visit_query = "SELECT Date_visit FROM session WHERE ID=$this->sessionID";
-        $Date_visit  = $DB->pselectOne($Date_visit_query, array());
-        $viz_label_query = "SELECT visit_label FROM session WHERE ID=$this->sessionID";
-        $viz_label = $DB->pselectOne($viz_label_query, array());
-        if (!($Date_visit >= "2018-09-19" && ($viz_label == "PREFU12" || $viz_label == "PREFU24" || $viz_label == "PREFU36" || $viz_label == "PREFU48" || $viz_label = "PREFU72" || $viz_label == "PREFU84" || $viz_label == "NAPFU12" || $viz_label == "NAPFU24" || $viz_label == "NAPFU36" || $viz_label = "NAPFU48" || $viz_label == "NAPFU72" || $viz_label == "NAPFU84" || $viz_label == "MCIFU12" || $viz_label == "MCIFU24"))) {
-            if (!($Date_visit >= "2017-08-11" && ($viz_label == "PREFU60" || $viz_label == "NAPFU60"))) {
-                $query .= " AND b.test_name!='TMT' ";
-                $query .= " AND b.test_name!='DKEFS' ";
-                $query .= " AND b.test_name!='RAVLT' ";
-            }
         }
 
         // get the list of instruments
