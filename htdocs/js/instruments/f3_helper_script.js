@@ -32,6 +32,14 @@ $(document).ready(function() {
       'N': 'no',
       '': 'not_answered'
     };
+    // Object to map input values to select values for a nullable yes/no select with
+    // the optional 'current' value
+    let yesNoCurrentNA = {
+      'Y': 'yes',
+      'N': 'no',
+      'C': 'current',
+      '': 'not_answered'
+    };
     // Object to map input values to select values for a nullable not_answered
     // select
     let nullNA = {
@@ -63,8 +71,8 @@ $(document).ready(function() {
         '5C) Do you have a family member who was enrolled in the PREVENT-AD study since your Eligibility visit?\n\n\tY => Yes\n\tN => No\n\t blank => Not Answered',
         yesNoNA);
       let answer5D = validatePrompt(
-        '5D) Any changes in habits since your Eligibility visit?\n\n\tY => Yes\n\tN => No\n\t blank => Not Answered',
-        yesNoNA);
+        '5D) Any changes in habits since your Eligibility visit?\n\n\tY => Yes\n\tC => Current\n\tN => No\n\t blank => Not Answered',
+        yesNoCurrentNA);
       // Initialize and set to empty string the variables for the questions
       // that can be skipped given the value of the preceding question
       let answer6 = '';
@@ -100,7 +108,7 @@ $(document).ready(function() {
       let answer12Explanation2Status = '';
       let answer13 = '';
       // If the value of the question 5D is yes, prompt for all questions
-      if (answer5D === 'yes') {
+      if (answer5D === 'yes' || answer5D === 'current') {
         // Use the validatePrompt question to get the values and assign to
         // initialized variables
         answer6 = validatePrompt(
