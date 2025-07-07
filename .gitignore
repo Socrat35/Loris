@@ -8,6 +8,7 @@ project-*
 /vendor
 .idea
 tools/*.txt
+tools/*.csv
 htdocs/phpunit_codecoverage/
 htdocs/my_tests/
 docs/css/
