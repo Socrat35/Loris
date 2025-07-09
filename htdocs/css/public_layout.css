@@ -162,6 +162,22 @@ h1, h2, h3, h4 {
   padding: 0 20px 40px 20px;
 }
 
+section.study-description {
+  text-align: center;
+}
+
+section.study-description > div.flex-wrapper {
+  justify-content: center;
+}
+
+span.bold {
+  font-weight: bold;
+}
+
+span.emphasis {
+  font-style: italic;
+}
+
 /* Tablets and bigger */
 @media (min-width: 768px) {
   .header { height: 140px; }
