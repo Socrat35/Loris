@@ -1,0 +1,143 @@
+span.bold {
+  font-weight: bolder;
+}
+
+span.emphasis {
+  font-style: italic;
+}
+
+span.underline {
+  text-decoration: underline;
+}
+
+span.font-larger {
+  font-size: larger;
+}
+
+optgroup {
+  text-align: center;
+}
+
+h4 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: bold;
+  font-style: italic;
+  font-size: small;
+}
+
+input:disabled, textarea:disabled, select:disabled {
+  font-style: italic;
+  opacity: 85%;
+}
+
+optgroup[label="Internal Users"] > option {
+}
+
+optgroup[label="External Users"] > option {
+  color: lightgray;
+  font-style: italic;
+}
+
+option {
+  text-align: center;
+  font-size: smaller;
+}
+
+h2 {
+  font-weight: bold;
+  text-align: center;
+}
+
+h3 {
+  text-align: center;
+  font-weight: bold;
+}
+
+.font-smaller{
+  font-size: smaller;
+}
+
+.font-xsmall{
+  font-size: x-small;
+}
+
+.no-top-border{
+  border-top-style: hidden !important;
+}
+
+.no-left-border{
+  border-left-style: hidden !important;
+}
+.no-right-border{
+  border-right-style: hidden !important;
+}
+.no-bottom-border{
+  border-bottom-style: hidden !important;
+}
+
+.panel-heading .accordion-toggle:after {
+  font-family: 'Glyphicons Halflings';
+  content: "\e114";
+  float: right;
+  color: grey;
+}
+.panel-heading .accordion-toggle.collapsed:after {
+  content: "\e080";
+}
+
+input[type="text"] {
+  text-align: center;
+}
+
+textarea {
+  text-align: center;
+  vertical-align: middle;
+}
+
+tr.hiddenRow {
+  display: none;
+}
+
+.tooltip-inner {
+  max-width: 1000px !important;
+}
+
+input:focus::placeholder {
+  color: transparent;
+}
+
+.panel-heading > h4 {
+  text-align: center;
+  font-weight: bold;
+}
+
+.table-container {
+  display: flex;
+  margin-top: 20px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+input[type=text][readonly]{
+  background-color: lightgray;
+  font-style: italic;
+}
+
+table > thead > tr > td,
+table > thead > tr > th{
+  text-align: center;
+}
+
+td, th {
+  vertical-align: middle !important;
+  text-align: center;
+}
+
+tr.separator-row {
+  background-color: gray;
+  height: 20px;
+}
+
+
