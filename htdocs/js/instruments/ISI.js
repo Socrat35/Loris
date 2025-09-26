@@ -1,5 +1,5 @@
 /**
- * Helper script for the two pages of the PHQ-9 instrument.
+ * Helper script for the two pages of the ISI instrument.
  *
  * @author Jean-Michel Raoult <jean-michel.raoult.comtl@ssss.gouv.qc.ca>
  */
@@ -164,7 +164,7 @@ function instrumentSettingsEventHandler() {
     window.location.href = '/' +
       candID + '/' +
       sessionID + '/' +
-      'PHQ9/Data_Entry/?' +
+      'ISI/Data_Entry/?' +
       'Test_Language=' + testLanguage +
       '&commentID=' + commentID;
   });
