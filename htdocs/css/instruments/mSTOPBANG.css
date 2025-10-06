@@ -1,0 +1,173 @@
+#form-table > thead > tr > th {
+  text-align: center;
+  vertical-align: middle;
+}
+
+#form-table > tbody > tr > td {
+  vertical-align: middle;
+}
+
+div.question-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#form-table > tbody > tr > td > p {
+  margin-bottom: 0;
+  text-align: center;
+}
+
+#results-table ul li {
+  padding-left: 0px;
+  text-align: left;
+}
+
+span.larger-capitalization {
+  margin-left: 2px;
+  margin-right: 2px;
+  font-variant: small-caps;
+  font-size: xx-large;
+}
+
+td.severity1 {
+  background-color: greenyellow;
+  font-weight: bold;
+  color: gray;
+}
+
+td.severity2 {
+  background-color: #DFB359;
+  font-weight: bold;
+  color: white;
+}
+
+td.severity3 {
+  background-color: #884f33;
+  font-weight: bold;
+  color: white;
+}
+
+#results-table span.glyphicon {
+  margin-right: 3px;
+}
+
+span.passed {
+  color: green;
+}
+
+span.failed {
+  color: red;
+}
+
+tr.calculated-info{
+  background-color: lightgray;
+}
+
+tr.calculated-info > td{
+  text-align: center;
+  font-weight: bold !important;
+  font-style: italic;
+}
+
+table.data-entry-table th,
+table.data-entry-table td,
+#results-table th,
+#results-table td{
+  vertical-align: middle;
+}
+
+table.top-results-table td,
+table.top-results-table th{
+  text-align: center;
+}
+
+#data_entry_form {
+  margin-top: 15px;
+}
+
+tr.separator-row {
+  background-color: gray;
+  height: 20px;
+}
+
+table.data-entry-table {
+  table-layout: fixed;
+}
+
+span.bold {
+  font-weight: bolder;
+}
+
+span.emphasis {
+  font-style: italic;
+}
+
+th.calculated-value {
+  color: white;
+  background-color: gray;
+  font-style: italic;
+}
+
+.no-left-border{
+  border-left-style: hidden !important;
+}
+
+.no-right-border{
+  border-right-style: hidden !important;
+}
+
+.no-top-border{
+  border-top-style: hidden !important;
+}
+
+input[type="radio"] {
+  width: 20px;
+  height: 20px;
+}
+
+optgroup {
+  text-align: center;
+}
+
+optgroup[label="Internal Users"] > option {
+}
+
+optgroup[label="External Users"] > option {
+  color: lightgray;
+  font-style: italic;
+}
+
+option {
+  text-align: center;
+  font-size: smaller;
+}
+
+input[type=text]{
+  text-align: center;
+}
+
+input[type=checkbox]{
+  width: auto;
+}
+
+.font-smaller{
+  font-size: smaller;
+}
+
+h2 {
+  font-weight: bold;
+  text-align: center;
+}
+
+h3{
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: bold;
+}
+
+#buttons-container {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-evenly;
+}
