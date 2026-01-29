@@ -1,5 +1,5 @@
 /**
- * Helper script for the two pages of the Telephone Visit (Daridorexant) instrument.
+ * Helper script for the two pages of the Medical Update Checklist (MUC) instrument.
  *
  * @author Jean-Michel Raoult <jean-michel.raoult.comtl@ssss.gouv.qc.ca>
  */
@@ -109,7 +109,7 @@ function instrumentSettingsEventHandler() {
     window.location.href = '/' +
       candID + '/' +
       sessionID + '/' +
-      'telephone_visit_daridorexant/Data_Entry/?' +
+      'MUC/Data_Entry/?' +
       'Test_Language=' + testLanguage +
       '&Test_Version=' + testVersion +
       '&commentID=' + commentID;
