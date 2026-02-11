@@ -41,80 +41,13 @@ $(document).ready(function() {
   adjustDefaultDisplayElementsForDataEntry();
   // Adding listeners for changes to the instrument settings
   instrumentSettingsEventHandler();
+  // Adding radio button listeners
+  addRadioButtonListeners();
   // Adding button listeners
   addButtonListeners();
+  // Initialize the radio buttons if not disabled
+  $('input.scoringQuestion[type=radio]:checked:not([disabled])').trigger('change');
 });
-
-/**
- *
- * Function to add listeners to button elements.
- *
- */
-function addButtonListeners() {
-  _addResetButtonListener();
-  _addSubmitButtonListener();
-}
-
-/**
- *
- * Function to add a listener to the submit button of the Add category modal.
- *
- * @private
- */
-function _addSubmitButtonListener() {
-  $('#submit-button').on('click', function(e) {
-    // Initialize an errors' object
-    let errors = {};
-    // Get unsupported characters matches
-    let matches = $('#Comments').val().match(/[^()?!:0-9a-z,\.'\-\/àÀâÂçÇéÉèÈêÊëËîÎïÏôÔÖöûÛùÙüÜÿŸñæœ ]/gi);
-    // If there were matches
-    if (matches) {
-      // stop propagation
-      e.preventDefault();
-      // Add errors to object
-      errors.Comments = matches.toString();
-    }
-    // If there were errors in the object
-    if (Object.keys(errors).length > 0) {
-      // prompt a message with all the errors
-      _submitErrorMessage(
-        errors,
-        'There are invalid characters in:',
-        'Comments: Invalid Characters');
-      return;
-    }
-  });
-}
-
-/**
- *
- * Function to add a listener to the reset button of the data entry page.
- *
- */
-function _addResetButtonListener() {
-  // For a click on the button
-  $('#reset-button').on('click', function() {
-    // Uncheck all radio controls
-    $('input[type="radio"]').prop('checked', false);
-    // Blank the text input
-    $('input[type="text"], textarea').val('');
-  });
-}
-
-/**
- * Function which removes default elements from the display to maximize
- * the space available for data entry.
- */
-function adjustDefaultDisplayElementsForDataEntry() {
-  // If the data entry table structure exists (data entry page only)
-  if ($('input[type="hidden"][name="commentID"]').length === 0) {
-    // Detach the current lorisworkspace div
-    let currentSpace = $('#lorisworkspace').detach();
-    // Remove the two information tables from their div and append the
-    // saved structure to the proper element
-    $('div.inset > div:nth-child(2)').empty().append(currentSpace);
-  }
-}
 
 /**
  * Function which, if it exists, adjusts the background color
@@ -137,6 +70,21 @@ function dynamicallyAdjustWindowDifferenceBackgroundColor() {
     // Apply the background color variable to the CSS of the Window Difference
     // cell
     $('#windowDifferenceCell').css({backgroundColor: backgroundColor});
+  }
+}
+
+/**
+ * Function which removes default elements from the display to maximize
+ * the space available for data entry.
+ */
+function adjustDefaultDisplayElementsForDataEntry() {
+  // If the data entry table structure exists (data entry page only)
+  if ($('input[type="hidden"][name="commentID"]').length === 0) {
+    // Detach the current lorisworkspace div
+    let currentSpace = $('#lorisworkspace').detach();
+    // Remove the two information tables from their div and append the
+    // saved structure to the proper element
+    $('div.inset > div:nth-child(2)').empty().append(currentSpace);
   }
 }
 
@@ -167,6 +115,104 @@ function instrumentSettingsEventHandler() {
       'PHQ9/Data_Entry/?' +
       'Test_Language=' + testLanguage +
       '&commentID=' + commentID;
+  });
+}
+
+/**
+ *
+ * Function to add listeners to the radio input elements.
+ *
+ */
+function addRadioButtonListeners() {
+  _addScoringQuestionListeners();
+}
+
+/**
+ *
+ * Function to add listener to the scoring questions radio input elements.
+ *
+ * @private
+ */
+function _addScoringQuestionListeners() {
+  // When a scoring question radio input is changed
+  $('input.scoringQuestion[type=radio]').on('change', function(e) {
+    // If the scoring question value is greater than zero
+    if ($(e.target).val() !== '0') {
+      // Activate the optional question
+      $('input[type=radio][name="q10"]').prop('disabled', false);
+      // Update the required prop of the question based on administration status (mandatory only if All, optional
+      // for partial)
+      $('input[type=radio][name="q10"]').prop('required', $('#Administration').val() === 'All');
+      // Disabled if there are no non-zero scoring questions
+    } else if ($('input.scoringQuestion[type=radio]:checked:not([value="0"])').length === 0) {
+      $('input[type=radio][name="q10"]').prop('disabled', true).prop('required', false);
+    }
+  });
+}
+
+/**
+ *
+ * Function to add listeners to button elements.
+ *
+ */
+function addButtonListeners() {
+  _addResetButtonListener();
+  _addSubmitButtonListener();
+}
+
+/**
+ *
+ * Function to add a listener to the reset button of the data entry page.
+ *
+ */
+function _addResetButtonListener() {
+  // For a click on the button
+  $('#reset-button').on('click', function() {
+    // Uncheck all radio controls
+    $('#data-entry-table1 input[type="radio"]').prop('checked', false);
+    // Blank the text input
+    $('#data-entry-table1 input[type="text"], textarea').val('');
+  });
+}
+
+/**
+ *
+ * Function to add a listener to the submit button of the Add category modal.
+ *
+ * @private
+ */
+function _addSubmitButtonListener() {
+  $('#submit-button').on('click', function(e) {
+    // If there are no non-zero scoring question and the optional question is not null
+    if ($('input.scoringQuestion[type=radio]:checked:not([value="0"])').length === 0 &&
+        $('input.optionalQuestion[type=radio]:checked').length === 1) {
+      // stop propagation
+      e.preventDefault();
+      // Prompt an error message
+      fancyErrorPrompt('Optional Question',
+        'The value for the optional last question cannot be non-null if no problems were signaled.');
+      return;
+    }
+    // Initialize an errors' object
+    let errors = {};
+    // Get unsupported characters matches
+    let matches = $('#Comments').val().match(/[^()?!:0-9a-z,\.'\-\/àÀâÂçÇéÉèÈêÊëËîÎïÏôÔÖöûÛùÙüÜÿŸñæœ ]/gi);
+    // If there were matches
+    if (matches) {
+      // stop propagation
+      e.preventDefault();
+      // Add errors to object
+      errors.Comments = matches.toString();
+    }
+    // If there were errors in the object
+    if (Object.keys(errors).length > 0) {
+      // prompt a message with all the errors
+      _submitErrorMessage(
+        errors,
+        'There are invalid characters in:',
+        'Comments: Invalid Characters');
+      return;
+    }
   });
 }
 
